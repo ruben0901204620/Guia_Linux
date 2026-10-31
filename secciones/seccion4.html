@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 4: La Shell de Linux — Enterprise Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500/30 bg-gray-950 text-slate-200">
+
+    <!-- Barra de progreso superior -->
+    <div class="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500"></div>
+
+    <!-- Encabezado -->
+    <header class="main-header border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="header-logo-box w-10 h-10 flex items-center justify-center shadow-md border border-zinc-700 rounded-xl overflow-hidden bg-zinc-800 hover:border-blue-500 transition-colors">
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C9.5 2 7 4 7 7.5C7 9.1 7.6 10.4 8.5 11.3C7.1 12.3 6 14 6 16C6 19.5 8.5 21 12 21C15.5 21 18 19.5 18 16C18 14 16.9 12.3 15.5 11.3C16.4 10.4 17 9.1 17 7.5C17 4 14.5 2 12 2Z" fill="currentColor"/>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-md font-bold tracking-tight text-white">Enterprise Linux Engine</h1>
+                    <p class="text-xs text-zinc-500 font-mono">// Secc. 4: La Shell de Linux</p>
+                </div>
+            </div>
+
+            <button id="theme-toggle" class="theme-btn px-4 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-300 flex items-center gap-2 text-xs font-mono font-bold uppercase transition-all hover:scale-[1.02]">
+                <i class="fas fa-sun text-amber-400"></i> <span>MODO CLARO</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl w-full mx-auto px-6 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+        
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sidebar-box sticky top-24 p-5 border border-zinc-800 rounded-2xl bg-zinc-900/30 space-y-4 backdrop-blur-sm">
+                <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono">Índice del Módulo</h3>
+                <nav class="space-y-1">
+                    <a href="#intro" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 1. La Shell de Linux</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#basicos" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 2. Comandos Básicos</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#documentacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 3. Documentación</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#logica" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 4. Expresiones Lógicas</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#alias" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 5. Alias y Rutas</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#atajos" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 6. Atajos de Teclado</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#cheatsheet" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span> 7. Resumen Rápido</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="lg:col-span-3 space-y-8">
+
+            <!-- Aquí va todo el contenido de las secciones (1 a 7) -->
+             <!-- ====================== SECCIÓN 1: LA SHELL DE LINUX ====================== -->
+<section id="intro" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">1. La Shell de Linux</h2>
+    
+    <p class="text-sm text-zinc-300 leading-relaxed">
+        La shell (o interfaz de línea de comandos) es un programa que permite al usuario interactuar con el sistema operativo mediante comandos de texto. 
+        Es el intermediario entre el usuario y el kernel de Linux.
+    </p>
+
+    <div class="space-y-3">
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono">Tipos de shell más comunes:</h4>
+        <ul class="text-sm space-y-2 text-zinc-400 list-disc list-inside pl-4">
+            <li><strong class="text-zinc-200">bash (Bourne Again SHell)</strong>: La más utilizada por defecto en la mayoría de distribuciones Linux.</li>
+            <li><strong class="text-zinc-200">zsh (Z Shell)</strong>: Muy popular en Arch Linux y usada por defecto en macOS desde Catalina.</li>
+            <li><strong class="text-zinc-200">sh (Bourne Shell)</strong>: La shell original de Unix.</li>
+            <li><strong class="text-zinc-200">fish</strong>: Shell moderna con autocompletado avanzado.</li>
+        </ul>
+    </div>
+
+    <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+    
+    <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50">
+        <table class="min-w-full text-sm text-left font-mono">
+            <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                <tr>
+                    
+                    <th class="p-4" ><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                    <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                    <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                <tr>
+                    <td class="p-4 leading-relaxed">
+                        $ echo $SHELL<br>
+                        # Generalmente bash<br>
+                        # /bin/bash<br>
+                        <span class="text-emerald-400">bash es la shell por defecto.</span>
+                    </td>
+                    <td class="p-4 leading-relaxed">
+                        $SHELL</code><br>
+                        # bash o zsh según config<br>
+                        # /bin/bash o /bin/zsh<br>
+                        <span class="text-emerald-400">Arch usa bash; zsh es muy popular aquí.</span>
+                    </td>
+                    <td class="p-4 leading-relaxed">
+                        $ echo $SHELL<br>
+                        # Generalmente bash<br>
+                        # /bin/bash<br>
+                        <span class="text-emerald-400">bash es la shell por defecto.</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Simulador de Terminal -->
+    <div class="console-box-wrapper mt-6">
+        <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+            <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                <i class="fas fa-terminal"></i> 
+                tty_register // simulate --echo-shell
+            </span>
+            <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                <i class="fas fa-play mr-1"></i> EXEC
+            </button>
+        </div>
+        
+        <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px]" data-sim-id="echo-shell">
+            <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+            <div class="flex items-center gap-2 mt-3">
+                <span class="text-prompt-user font-bold text-emerald-400">user@machine</span>
+                <span class="text-white">:</span>
+                <span class="text-prompt-dir font-bold text-sky-400">~</span>
+                <span class="text-white">#</span>
+                <span class="current-typing text-white"></span>
+                <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 2: COMANDOS BÁSICOS ====================== -->
+<section id="basicos" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-8">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">2. Comandos Básicos de la Shell</h2>
+
+    <!-- history -->
+    <div class="space-y-4">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">history</h3>
+        </div>
+        <p class="text-sm text-zinc-300"><strong>
+        </strong> Muestra el historial de comandos ejecutados en la shell. Cada línea tiene un número de identificación.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>history [opciones]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Permite ver, buscar y reutilizar comandos que ya ejecutaste anteriormente. Muy útil para no tener que escribir comandos largos de nuevo.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ history<br>
+                            $ history 20<br>
+                            $ !55<br>
+                            <span class="text-emerald-400">Muestra todo el historial. history 20 = últimos 20. !55 re-ejecuta el comando 55.</span>
+                        </td>
+                        <td class="p-4">
+                            $ history<br>
+                            $ history 10<br>
+                            $ !23<br>
+                            <span class="text-emerald-400">Igual en Arch. El historial se guarda en ~/.bash_history o ~/.zsh_history según la shell.</span>
+                        </td>
+                        <td class="p-4">
+                            $ history<br>
+                            $ history 5<br>
+                            $ !10<br>
+                            <span class="text-emerald-400">Igual en Fedora. El historial se guarda en ~/.bash_history.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono">tty_register // simulate --history</span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409]" data-sim-id="history">
+                <div class="terminal-stream-history space-y-2"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- clear -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">clear</h3>
+            
+        </div>
+        <p class="text-sm text-zinc-300">
+        </strong> Limpia la pantalla de la terminal, dejando el cursor en la parte superior. Equivalente al atajo Ctrl + L.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>clear</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Limpiar la terminal cuando hay mucho texto acumulado para trabajar con mayor claridad.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ clear<br>
+                            <span class="text-emerald-400">Identico en todas las distribuciones.</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear<br>
+                            <span class="text-emerald-400">Identico en todas las distribuciones.</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear<br>
+                            <span class="text-emerald-400">Identico en todas las distribuciones.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono">tty_register // simulate --clear</span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409]" data-sim-id="clear">
+                <div class="terminal-stream-history space-y-2"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- type -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">type</h3>
+        </div>
+        <p class="text-sm text-zinc-300">
+             Indica de qué tipo es un comando: si es un builtin de la shell, un alias, una función, o un programa externo con su ruta.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>type [comando]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Saber si un comando es interno de la shell (builtin), un alias creado por ti, o un ejecutable externo ubicado en el sistema de archivos.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ type cd <br>
+                            $ type ls <br>
+                            $ type which <br>
+                            $ type cp <br>
+                            <span class="text-emerald-400">cd: builtin | ls: alias (generalmente) | which: hashed | cp: /usr/bin/cp</span>
+                        </td>
+                        <td class="p-4">
+                            $ type cd <br>
+                            $ type ls <br>
+                            $ type which <br>
+                            <span class="text-emerald-400">Mismo funcionamiento. En zsh puede dar resultados ligeramente distintos.</span>
+                        </td>
+                        <td class="p-4">
+                            $ type cd <br>
+                            $ type ls <br>
+                            $ type cp <br>
+                            <span class="text-emerald-400">Mismo funcionamiento que en Debian.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-5 text-sm">
+            <strong class="text-blue-400">Resultados posibles del comando type:</strong>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-zinc-400">
+                <li><code>is a shell builtin: El comando es interno de la shell (ej: cd, help)</code></li>
+                <li><code>is aliased to: El comando es un alias (ej: ls → ls --color=auto)</code></li>
+                <li><code>is hashed: La ruta ya fue resuelta y guardada en la hash table para mayor velocidad</code></li>
+                <li><code>is /ruta/al/ejecutable: Programa externo con su ubicacion en el sistema</code></li>
+            </ul>
+        </div>
+
+        <div class="bg-zinc-950 border border-amber-900/50 rounded-xl p-5 text-sm">
+            <strong class="text-amber-400">Curiosidad: ¿Qué significa 'is hashed'?</strong><br>
+            <p class="text-zinc-400 mt-2">Cuando la shell dice que un comando 'is hashed', significa que ya resolvio su ruta y la guardo en una hash table 
+                para acceder a ella mas rapido en el futuro. Esto evita buscar el archivo en el sistema cada vez que se ejecuta.</p>
+            <div class="font-mono text-xs mt-3">
+                $ hash                   # Ver todos los comandos hasheados<br>
+                $ hash -r                # Limpiar la hash table
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono">tty_register // simulate --type</span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409]" data-sim-id="type">
+                <div class="terminal-stream-history space-y-2"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ls -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">ls</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Lista el contenido de un directorio. Es uno de los comandos más utilizados en Linux.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>ls [opciones] [directorio]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Ver los archivos y carpetas de un directorio. Con distintas opciones se puede ver información detallada como permisos, propietario, tamaño y fecha de modificación.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ ls<br>
+                            $ ls -l<br>
+                            $ ls -la<br>
+                            $ ls -lah<br>
+                            $ ls -lah Escritorio/<br>
+                            <span class="text-emerald-400">En Debian/Ubuntu la carpeta es 'Escritorio' en español.</span>
+                        </td>
+                        <td class="p-4">
+                            $ ls<br>
+                            $ ls -l<br>
+                            $ ls -la<br>
+                            $ ls -lah<br>
+                            $ ls -lah Desktop/<br>
+                            <span class="text-emerald-400">En Arch el directorio por defecto suele ser 'Desktop' en inglés.</span>
+                        </td>
+                        <td class="p-4">
+                            $ ls<br>
+                            $ ls -l<br>
+                            $ ls -la<br>
+                            $ ls -lah<br>
+                            $ ls -lah Escritorio/<br>
+                            <span class="text-emerald-400">En Fedora suele ser 'Escritorio' en español como en Debian.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-zinc-950/50 border border-zinc-800 rounded-xl p-5 text-sm">
+            <strong class="text-blue-400">Opciones más importantes de ls:</strong><br>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-zinc-400">
+                <li>-l → Muestra listado largo con permisos, propietario, tamaño y fecha.<br></li>
+                <li>-a → Muestra archivos ocultos (los que empiezan con punto).<br></li>
+                <li>-h → Muestra el tamaño en formato legible (KB, MB, GB).<br></li>
+                <li>-lah → Combinación de los tres anteriores. La más completa y usada.<br></li>
+            </ul>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono">tty_register // simulate --ls-lah</span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409]" data-sim-id="ls-lah">
+                <div class="terminal-stream-history space-y-2"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 3: OBTENIENDO INFORMACIÓN DE LOS COMANDOS ====================== -->
+<section id="documentacion" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-8">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">3. Obteniendo información de los Comandos</h2>
+    <p class="text-sm text-zinc-300">Linux ofrece varios sistemas de documentación integrados. Aquí los vemos de menor a mayor profundidad:</p>
+
+    <!-- help -->
+    <div class="space-y-4">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">help</h3>
+        </div>
+        <p class="text-sm text-zinc-300"> Muestra información de ayuda sobre los comandos internos (builtins) de la shell bash. Solo funciona con builtins, no con programas externos.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>help [comando_builtin]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong>Consultar rapidamente como funciona un comando interno de bash, como cd, type, alias, echo, etc. Si intentas usarlo con un programa externo como ls, te dira que no lo conoce.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ help <br>
+                            $ help type<br>
+                            $ help help<br>
+                            $ help cd<br>
+                            <span class="text-emerald-400">Disponible en bash. Si usas zsh no existira este comando.</span>
+                        </td>
+                        <td class="p-4">
+                            $ help <br>
+                            $ help type<br>
+                            $ help cd<br>
+                            <span class="text-emerald-400">Disponible solo en bash. En zsh usar 'man zshbuiltins'.</span>
+                        </td>
+                        <td class="p-4">
+                            $ help <br>
+                            $ help type<br>
+                            $ help cd<br>
+                            <span class="text-emerald-400">Disponible en bash igual que en Debian.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --help-builtin
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="help-builtin">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- man -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">man</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Abre el manual completo (manual pages) de un comando o programa. Es la forma más completa de obtener documentación en Linux.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong><code>man [comando]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong>Leer la documentacion detallada y oficial de cualquier comando del sistema. Incluye descripcion, todas las opciones, ejemplos y errores posibles. Para salir del manual presiona 'q'.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ man ls <br>
+                            $ man cp <br>
+                            $ man bash <br>
+                            <span class="text-emerald-400">En Debian/Ubuntu puede ser necesario instalar: sudo apt install man-db</span>
+                        </td>
+                        <td class="p-4">
+                            $ man ls <br>
+                            $ man pacman <br>
+                            $ man bash <br>
+                            <span class="text-emerald-400">En Arch: sudo pacman -S man-db man-pages</span>
+                        </td>
+                        <td class="p-4">
+                            $ man ls <br>
+                            $ man dnf <br>
+                            $ man bash <br>
+                            <span class="text-emerald-400">En Fedora: sudo dnf install man-db</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-zinc-950/50 border border-zinc-800 rounded-xl p-5 text-sm">
+            <strong class="text-blue-400"> Navegación dentro del manual:</strong><br>
+            <ul class="list-disc pl-5 mt-2 space-y-1 text-zinc-400">
+                <li>q → Salir del manual.<br></li>
+                <li>Flechas o j/k → Moverse línea a línea.<br></li>
+                <li>Espacio → Avanzar una página.<br></li>
+                <li>/palabra → Buscar una palabra dentro del manual.</li>
+                <li>n → Siguiente coincidencia de búsqueda. N: Anterior.</li>
+            </ul>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --man
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="man">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- info -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">info</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Sistema de documentación alternativo al manual (man). Provee información más detallada en formato hipertexto.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong>info [comando]</p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Para que sirve: Obtener documentación mas extensa que man para comandos del proyecto GNU. No todos los comandos tienen pagina info; en ese caso redirige al manual.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+        
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ info ls <br>
+                            $ info bash <br>
+                            $ info coreutils <br>
+                            <span class="text-emerald-400">Puede requerir: sudo apt install info</span>
+                        </td>
+                        <td class="p-4">
+                            $ info ls <br>
+                            $ info bash <br>
+                            <span class="text-emerald-400">Puede requerir: sudo pacman -S texinfo</span>
+                        </td>
+                        <td class="p-4">
+                            $ info ls <br>
+                            $ info bash<br>
+                            <span class="text-emerald-400">Puede requerir: sudo dnf install info</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --info
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="info">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- whatis -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">whatis</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Muestra una descripcion muy breve (una sola linea) de un comando. Consulta la base de datos del manual.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>whatis [comando]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Obtener en segundos una descripcion corta de para que sirve un comando, sin tener que abrir el manual completo.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ whatis ls <br>
+                            $ whatis cd <br>
+                            $ whatis type <br>
+                            $ whatis cp <br>
+                            <span class="text-emerald-400">Puede requerir ejecutar 'sudo mandb' para actualizar la base de datos.</span>
+                        </td>
+                        <td class="p-4">
+                            $ whatis ls <br>
+                            $ whatis cd <br>
+                            $ whatis type <br>
+                            <span class="text-emerald-400">Puede requerir ejecutar 'sudo mandb' para actualizar la base de datos.</span>
+                        </td>
+                        <td class="p-4">
+                            $ whatis ls <br>
+                            $ whatis cd <br>
+                            $ whatis type <br>
+                            <span class="text-emerald-400">Puede requerir ejecutar 'sudo mandb' para actualizar la base de datos.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --whatis
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="whatis">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- apropos -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">apropos</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Busca en las descripciones de los manuales por una palabra clave. Devuelve todos los comandos relacionados con ese termino.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>apropos [palabra_clave]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong>  Encontrar que comando usar cuando no recuerdas su nombre exacto pero sabes para que sirve. Por ejemplo, si no recuerdas como se lista un directorio, buscas 'apropos directory'.</p>
+        
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ apropos directory <br>
+                            $ apropos 'list directory' <br>
+                            $ apropos copy <br>
+                            <span class="text-emerald-400">Puede requerir 'sudo mandb' si la base de datos no esta actualizada.</span>
+                        </td>
+                        <td class="p-4">
+                            $ apropos directory <br>
+                            $ apropos network <br>
+                            $ apropos copy <br>
+                            <span class="text-emerald-400">Puede requerir 'sudo mandb'. Equivalente a 'man -k'.</span>
+                        </td>
+                        <td class="p-4">
+                            $ apropos directory <br>
+                            $ apropos network <br>
+                            $ apropos copy <br>
+                            <span class="text-emerald-400">Puede requerir 'sudo mandb'. Equivalente a 'man -k'.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bg-zinc-950 border border-amber-900/50 rounded-xl p-5 text-sm">
+            <strong class="text-amber-400">Nota:</strong><br>
+            <p class="text-zinc-400 mt-2">apropos es equivalente a man -k. Ambos buscan en las descripciones de las páginas del manual.</p>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --apropos
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="apropos">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --help -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">help  y  -h  (opciones de ayuda rápida)</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Muestra un resumen de ayuda del propio programa. La mayoría de programas externos lo soportan, a diferencia de 'help' que solo funciona con builtins.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> comando --help  |  comando -h</p>
+        <p class="text-sm text-zinc-300"><strong>Para qué sirve:<br>
+        </strong> Obtener rápidamente la lista de opciones disponibles de un programa sin abrir el manual completo.</p> 
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ ls --help <br>
+                            $ cp --help <br>
+                            $ ls -h <br>
+                            <span class="text-emerald-400">Nota: 'ls -h' NO es la ayuda; es la opcion 'human-readable' para tamanos legibles. Usar --help para la ayuda.</span>
+                        </td>
+                        <td class="p-4">
+                            $ ls --help <br>
+                            $ pacman --help <br>
+                            $ ls -h <br>
+                            <span class="text-emerald-400">En Arch, 'ls -h' tambien es human-readable, no ayuda.</span>
+                        </td>
+                        <td class="p-4">
+                            $ ls --help <br>
+                            $ dnf --help <br>
+                            $ ls -h <br>
+                            <span class="text-emerald-400">En Fedora igual; --help para ayuda, -h para tamanos legibles.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --program-help
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="program-help">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 4: MANEJO DE COMANDOS Y EXPRESIONES LÓGICAS ====================== -->
+<section id="logica" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-8">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">4. Manejo de Comandos y Expresiones Lógicas</h2>
+    <p class="text-sm text-zinc-300">La shell permite combinar varios comandos en una sola línea usando operadores. Esto hace posible crear flujos de ejecución condicionales o secuenciales.</p>
+
+    <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50">
+        <table class="min-w-full text-sm">
+            <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                <tr>
+                    <th class="p-4 text-left">Operador</th>
+                    <th class="p-4 text-left">Comportamiento</th>
+                    <th class="p-4 text-left">Ejemplo</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800 text-zinc-400 font-mono">
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400">&&</td>
+                    <td class="p-4">AND: el segundo comando solo se ejecuta si el primero tuvo exito (exit code 0).</td>
+                    <td class="p-4">clear && ls -lah</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-orange-400">||</td>
+                    <td class="p-4">OR: el segundo comando se ejecuta solo si el primero FALLO (exit code distinto de 0).</td>
+                    <td class="p-4">comando_invalido || ls</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-sky-400">;</td>
+                    <td class="p-4">Secuencial: ejecuta los comandos uno tras otro independientemente del resultado de cada uno.</td>
+                    <td class="p-4">clear ; ls</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- AND lógico -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <h3 class="text-xl font-bold text-emerald-400">Operador && (AND lógico)</h3>
+        <p class="text-sm text-zinc-300">Ejecuta el segundo comando SOLO si el primero fue exitoso. Si el primer comando falla, el segundo no se ejecuta.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ clear && ls <br>
+                            $ clear && ls -lah <br>
+                            $ mkdir test && cd test <br>
+                            <span class="text-emerald-400">Si 'clear' falla, 'ls' no se ejecuta. Util para encadenar operaciones que dependen entre si.</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear && ls <br>
+                            $ pacman -Sy && pacman -Su <br>
+                            $ mkdir test && cd test <br>
+                            <span class="text-emerald-400">Usado mucho en Arch para actualizar: primero sincroniza, luego actualiza solo si tuvo exito</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear && ls <br>
+                            $ dnf check-update && dnf upgrade <br>
+                            $ mkdir test && cd test <br>
+                            <span class="text-emerald-400">Mismo uso en Fedora con el gestor de paquetes dnf.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --operator-and
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="and-operator">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OR lógico -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <h3 class="text-xl font-bold text-orange-400">Operador || (OR lógico)</h3>
+        <p class="text-sm text-zinc-300">Ejecuta el segundo comando SOLO si el primero FALLO. Es el comportamiento opuesto al &&.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ cleasadasd || ls <br>
+                            $ ls /no_existe || echo 'Error' <br>
+                            $ ls || ls -lah <br>
+                            <span class="text-emerald-400">Como 'cleasadasd' no existe y falla, 'ls' SI se ejecuta. 'ls || ls -lah' → solo ejecuta 'ls', el segundo se omite porque el primero tuvo exito.</span>
+                        </td>
+                        <td class="p-4">
+                            $ comando_invalido || ls <br>
+                            $ ls /no_existe || echo 'Error' <br>
+                            <span class="text-emerald-400">Mismo comportamiento. El segundo comando actua como 'plan B'.</span>
+                        </td>
+                        <td class="p-4">
+                            $ comando_invalido || ls <br>
+                            $ ls /no_existe || echo 'Error' <br>
+                            <span class="text-emerald-400">Mismo comportamiento en Fedora.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --operator-or
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="or-operator">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secuencial -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <h3 class="text-xl font-bold text-sky-400">Operador ; (Secuencial)</h3>
+        <p class="text-sm text-zinc-300">Ejecuta todos los comandos en orden, independientemente de si alguno falla o no. No hay condicion, simplemente se ejecutan uno tras otro.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                    <tr>
+                        <td class="p-4">
+                            $ clear ; ls <br>
+                            $ date ; whoami ; ls <br>
+                            $ echo 'Hola' ; ls <br>
+                            <span class="text-emerald-400">Equivalente a escribir los comandos en lineas separadas. Se ejecutan todos aunque alguno falle.</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear ; ls <br>
+                            $ date ; whoami ; ls <br>
+                            <span class="text-emerald-400">Mismo comportamiento en Arch.</span>
+                        </td>
+                        <td class="p-4">
+                            $ clear ; ls <br>
+                            $ date ; whoami ; ls <br>
+                            <span class="text-emerald-400">Mismo comportamiento en Fedora.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --operator-seq
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="seq-operator">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 5: CREANDO COMANDOS PROPIOS CON ALIAS ====================== -->
+<section id="alias" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-8">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">5. Creando Comandos Propios con alias</h2>
+    <p class="text-sm text-zinc-300">Un alias es un nombre personalizado que le asignas a un comando o a una combinación de comandos. Son atajos que puedes definir tu mismo para no tener que escribir comandos largos repetidamente.</p>
+
+    <div class="space-y-4">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">alias</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Permite crear un nombre personalizado (alias) para un comando o serie de comandos. Ejecutado sin argumentos, lista todos los alias activos.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>alias [nombre]='comando'</code></p>
+        <p class="text-sm text-zinc-300"><strong>Para que sirve: <br>
+        </strong>Crear atajos personalizados para comandos que usas frecuentemente. Por ejemplo, en lugar de escribir 'clear ; ls' cada vez, puedes crear el alias 'clist'.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4 text-left"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4 text-left"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4 text-left"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400 font-mono">
+                    <tr>
+                        <td class="p-4 vertical-align-top">
+                            $ alias <br>
+                            $ alias clist='clear ; ls'<br>
+                            $ clist<br>
+                            $ alias ll='ls -lah'<br>
+                            <span class="text-emerald-400 text-xs mt-1 block">Los alias creados solo duran mientras la sesion esta activa. Para hacerlos permanentes, agrega la linea al archivo ~/.bashrc</span>
+                        </td>
+                        <td class="p-4 vertical-align-top">
+                            $ alias <br>
+                            $ alias clist='clear ; ls'<br>
+                            $ clist<br>
+                            $ alias ll='ls -lah'<br>
+                            <span class="text-emerald-400 text-xs mt-1 block">En Arch con zsh, agrega los alias en ~/.zshrc para que sean permanentes.</span>
+                        </td>
+                        <td class="p-4 vertical-align-top">
+                            $ alias <br>
+                            $ alias clist='clear ; ls'<br>
+                            $ clist<br>
+                            $ alias ll='ls -lah'<br>
+                            <span class="text-emerald-400 text-xs mt-1 block">Igual en Fedora. Agrega en ~/.bashrc para persistencia</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --alias-creation
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="alias-setup">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-5 space-y-3 text-sm">
+        <h4 class="font-bold text-amber-400 font-mono">Hacer un alias permanente:</h4>
+        <p class="text-zinc-400">Los alias definidos en la terminal se pierden al cerrar la sesión. Para hacerlos permanentes debes agregarlos a tu archivo de configuración de la shell:</p>
+        <div class="font-mono text-xs space-y-2 text-zinc-400 bg-black/30 p-4 rounded-lg border border-zinc-900 overflow-x-auto">
+            <div>$ nano ~/.bashrc           → Abrir el archivo de configuracion</div>
+            <div><span class="text-white">alias clist='clear ; ls'</span>   → Agregar esta linea al final del archivo</div>
+            <div>$ source ~/.bashrc         → Recargar la configuracion sin reiniciar</div>
+
+        </div>
+    </div>
+
+    <div class="bg-zinc-950 border border-amber-900/50 rounded-xl p-5 text-sm">
+            <strong class="text-amber-400">Nota:</strong><br>
+            <p class="text-zinc-400 mt-2">apropos es equivalente a man -k. Ambos buscan en las descripciones de las páginas del manual.</p>
+        </div>
+
+
+<!-- Eliminar alias -->
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <div class="flex items-center gap-3">
+            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+            <h3 class="text-xl font-bold text-white">unalias</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Elimina un alias creado previamente. El alias deja de existir inmediatamente.</p>
+        <p class="text-sm text-zinc-300"><strong>Uso:<br>
+        </strong> <code>unalias [nombre_del_alias]</code></p>
+        <p class="text-sm text-zinc-300"><strong>Opciones útiles:<br>
+        </strong>Borrar un alias que ya no necesitas o que quieres redefinir. Si intentas usar el alias despues de borrarlo, la shell dira que el comando no existe.</p>
+
+        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Ejemplos por distribución</h4>
+
+        <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm">
+            <table class="min-w-full">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4 text-left"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</th>
+                        <th class="p-4 text-left"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</th>
+                        <th class="p-4 text-left"><i class="fab fa-fedora text-blue-500"></i> Fedora</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800 text-zinc-400 font-mono">
+                    <tr>
+                        <td class="p-4 vertical-align-top">
+                            $ unalias clist <br>
+                            $ type clist   # Error: no existe <br>
+                            $ unalias -a   # Borra todos los alias <br>
+                            <span class="text-emerald-400 text-xs mt-1 block">Tras ejecutar 'unalias clist', si escribes 'clist' obtendras: bash: clist: command not found</span>
+                        </td>
+                        <td class="p-4 vertical-align-top">
+                            $ unalias clist <br>
+                            $ type clist   # Error: no existe <br>
+                            $ unalias -a <br>
+                            <span class="text-emerald-400 text-xs mt-1 block">Mismo comportamiento en Arch.</span>
+                        </td>
+                        <td class="p-4 vertical-align-top">
+                            $ unalias clist <br>
+                            $ type clist   # Error: no existe <br>
+                            $ unalias -a <br>
+                            <span class="text-emerald-400 text-xs mt-1 block">Mismo comportamiento en Fedora.</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper mt-4">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --alias-destruction
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[160px] overflow-x-auto" data-sim-id="alias-removal">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 6: ATAJOS ÚTILES PARA LA SHELL ====================== -->
+<section id="atajos" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-8">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">6. Atajos útiles para la Shell de Linux</h2>
+    <p class="text-sm text-zinc-300">Estos atajos de teclado funcionan en la shell bash (y en la mayoría de shells de Linux). Dominarlos aumenta significativamente la velocidad de trabajo en la terminal.</p>
+
+    <div class="space-y-4">
+        <h3 class="text-lg font-bold text-blue-400 font-mono">// Navegación en la línea de comandos:</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + A</span>
+                <span class="text-zinc-300">Mueve el cursor al <span class="text-emerald-400 font-bold">PRINCIPIO</span> de la línea actual.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + E</span>
+                <span class="text-zinc-300">Mueve el cursor al <span class="text-emerald-400 font-bold">FINAL</span> de la línea actual.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded w-fit text-xs">Alt + F</span>
+                <span class="text-zinc-300">Avanza el cursor <span class="text-emerald-400 font-bold">UNA PALABRA</span> hacia adelante.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded w-fit text-xs">Alt + B</span>
+                <span class="text-zinc-300">Retrocede el cursor <span class="text-emerald-400 font-bold">UNA PALABRA</span> hacia atrás.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded w-fit text-xs">Tab</span>
+                <span class="text-zinc-300"><span class="text-emerald-400 font-bold">AUTOCOMPLETA</span> automáticamente nombres de archivos, carpetas y comandos.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <h3 class="text-lg font-bold text-blue-400 font-mono">// Edición y borrado:</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + U</span>
+                <span class="text-zinc-300">Borra todo el texto desde el cursor hacia la <span class="text-orange-400 font-bold">IZQUIERDA</span>.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + K</span>
+                <span class="text-zinc-300">Borra todo el texto desde el cursor hacia la <span class="text-orange-400 font-bold">DERECHA</span>.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + W</span>
+                <span class="text-zinc-300">Borra la <span class="text-orange-400 font-bold">PALABRA ANTERIOR</span> completa antes del cursor.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + H</span>
+                <span class="text-zinc-300">Borra el <span class="text-orange-400 font-bold">CARÁCTER ANTERIOR</span> (equivalente a Backspace).</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + T</span>
+                <span class="text-zinc-300"><span class="text-orange-400 font-bold">INTERCAMBIA</span> la posición del carácter actual con el anterior.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Esc + T</span>
+                <span class="text-zinc-300"><span class="text-orange-400 font-bold">INTERCAMBIA</span> la posición de la palabra actual con la anterior.</span>
+            </div>
+             <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-orange-400 bg-orange-500/10 px-2 py-1 rounded w-fit text-xs">Alt + l/u</span>
+                <span class="text-zinc-300">Convertir la palabra actual a <span class="text-orange-400 font-bold">MINUSCULAS</span> (l) o <span class="text-orange-400 font-bold">MAYUSCULAS</span> (u).</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 pt-6 border-t border-zinc-800">
+        <h3 class="text-lg font-bold text-blue-400 font-mono">// Control del programa y pantalla:</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + L</span>
+                <span class="text-zinc-300"><span class="text-sky-400 font-bold">LIMPIAR</span> la consola por completo (idéntico al comando <code>clear</code>).</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + C</span>
+                <span class="text-zinc-300">Envía SIGINT para <span class="text-sky-400 font-bold">INTERRUMPIR/CANCELAR</span>  la ejecucion del programa actual.</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + D</span>
+                <span class="text-zinc-300"><span class="text-sky-400 font-bold">CERRAR</span> la shell actual (equivalente a escribir 'exit').</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2">
+                <span class="font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-1 rounded w-fit text-xs">Ctrl + R</span>
+                <span class="text-zinc-300"><span class="text-sky-400 font-bold">BUSCAR</span> en el historial de comandos. Escribe parte del comando y lo encuentra automaticamente</span>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-4 flex flex-col justify-between space-y-2 sm:col-span-2 lg:col-span-4">
+                <div class="flex items-center justify-between">
+                    <span class="font-mono font-bold text-sky-400 bg-sky-500/10 px-2 py-1 rounded w-fit text-xs">Alt + .  o  !$</span>
+                </div>
+                <span class="text-zinc-300">Inserta el <span class="text-sky-400 font-bold">ULTIMO ARGUMENTO</span> del comando anterior. Muy util para no repetir rutas largas.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="pt-6 border-t border-zinc-800 space-y-4">
+        <div>
+            <span class="font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded text-xs">Alt + .  o  !$</span>
+            <h3 class="text-lg font-bold text-white inline-block ml-2">Ejemplo práctico: Insertar último argumento</h3>
+        </div>
+        <p class="text-sm text-zinc-300">Inserta de forma automatizada el último argumento del comando anterior. Ideal para optimizar flujos interactivos al manipular directorios y rutas anidadas complejas.</p>
+        
+        <div class="bg-zinc-950 border border-zinc-700 rounded-xl p-5 font-mono text-sm overflow-x-auto">
+            <div class="text-zinc-500"># Paso 1: Examinar una ruta extensa</div>
+            <div class="text-emerald-400">$ ls -lah /home/usuario/Documentos/proyectos/</div>
+            <div class="text-zinc-500 mt-3"># Paso 2: Escribir comando y presionar el atajo</div>
+            <div class="text-zinc-300">$ cd <span class="text-amber-400 font-bold">&lt;Alt + .&gt;</span></div>
+            <div class="text-zinc-500 mt-1"># La terminal expande la cadena automáticamente a:</div>
+            <div class="text-emerald-400">$ cd /home/usuario/Documentos/proyectos/</div>
+        </div>
+
+        <div class="console-box-wrapper mt-6">
+            <div class="console-header px-4 py-2.5 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono flex items-center gap-2">
+                    <i class="fas fa-terminal"></i> tty_register // simulate --shell-shortcuts
+                </span>
+                <button class="btn-replay px-4 py-1 text-xs font-bold rounded-lg border border-zinc-700 hover:border-emerald-500 transition-colors">
+                    <i class="fas fa-play mr-1"></i> EXEC
+                </button>
+            </div>
+            <div class="custom-terminal p-6 font-mono text-sm bg-[#010409] min-h-[180px] overflow-x-auto" data-sim-id="atajos-shell">
+                <div class="terminal-stream-history space-y-2 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-3">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ====================== SECCIÓN 7: RESUMEN RÁPIDO — CHEATSHEET ====================== -->
+<section id="cheatsheet" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+
+    <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">7. Resumen Rápido — Cheatsheet Sección 4</h2>
+    <p class="text-sm text-zinc-300">Resumen estructural del módulo en consola:</p>
+
+    <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50">
+        <table class="min-w-full text-sm font-mono text-left">
+            <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                <tr>
+                    <th class="p-4 border-r border-zinc-800/50">Comando</th>
+                    <th class="p-4 border-r border-zinc-800/50">Función</th>
+                    <th class="p-4">Categoría</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-emerald-400 border-r border-zinc-800/50">history</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ver historial de comandos</td>
+                    <td class="p-4 text-zinc-500 text-xs">Comandos básicos</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-emerald-400 border-r border-zinc-800/50">clear</td>
+                    <td class="p-4 border-r border-zinc-800/50">Limpiar la terminal</td>
+                    <td class="p-4 text-zinc-500 text-xs">Comandos básicos</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-emerald-400 border-r border-zinc-800/50">type [SHELL]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Tipo e identidad de un comando</td>
+                    <td class="p-4 text-zinc-500 text-xs">Comandos básicos</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-emerald-400 border-r border-zinc-800/50">ls / ls -lah</td>
+                    <td class="p-4 border-r border-zinc-800/50">Listar archivos y directorios</td>
+                    <td class="p-4 text-zinc-500 text-xs">Comandos básicos</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">help [builtin]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ayuda de comandos internos bash</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">man [SHELL]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Manual completo de cualquier comando</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">info [SHELL]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Documentación extendida (GNU)</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">whatis [SHELL]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Descripción breve de un comando</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">apropos [kw]</td>
+                    <td class="p-4 border-r border-zinc-800/50">Buscar comando por palabra clave</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-sky-400 border-r border-zinc-800/50">SHELL --help</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ayuda rápida del propio programa</td>
+                    <td class="p-4 text-zinc-500 text-xs">Información</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-amber-400 border-r border-zinc-800/50">SHELL1 && SHELL2</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ejecutar SHELL2 si SHELL1 tuvo éxito</td>
+                    <td class="p-4 text-zinc-500 text-xs">Expresiones lógicas</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-amber-400 border-r border-zinc-800/50">SHELL1 || SHELL2</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ejecutar SHELL2 si SHELL1 falló</td>
+                    <td class="p-4 text-zinc-500 text-xs">Expresiones lógicas</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-amber-400 border-r border-zinc-800/50">SHELL1 ; SHELL2</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ejecutar ambos sin importar resultado</td>
+                    <td class="p-4 text-zinc-500 text-xs">Expresiones lógicas</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-violet-400 border-r border-zinc-800/50">alias n='SHELL'</td>
+                    <td class="p-4 border-r border-zinc-800/50">Crear atajo personalizado de comando</td>
+                    <td class="p-4 text-zinc-500 text-xs">Alias</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-violet-400 border-r border-zinc-800/50">unalias n</td>
+                    <td class="p-4 border-r border-zinc-800/50">Eliminar un alias</td>
+                    <td class="p-4 text-zinc-500 text-xs">Alias</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-violet-400 border-r border-zinc-800/50">hash</td>
+                    <td class="p-4 border-r border-zinc-800/50">Ver comandos en la hash table</td>
+                    <td class="p-4 text-zinc-500 text-xs">Internos shell</td>
+                </tr>
+                <tr class="hover:bg-zinc-900/40 transition-colors">
+                    <td class="p-4 font-bold text-violet-400 border-r border-zinc-800/50">hash -r</td>
+                    <td class="p-4 border-r border-zinc-800/50">Limpiar la hash table</td>
+                    <td class="p-4 text-zinc-500 text-xs">Internos shell</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    
+
+    <div class="text-center pt-6">
+        <p class="text-xs text-zinc-500 font-mono">
+            ¡Fin de la Sección 4 — La Shell de Linux!<br>
+            <span class="text-emerald-400 font-bold">Practica en tu terminal y domina estos comandos.</span>
+        </p>
+    </div>
+
+</section>
+
+        </main>
+    </div>
+
+    <footer class="text-center font-mono text-[10px] tracking-widest text-zinc-600 py-8 border-t border-zinc-900 mt-12 bg-zinc-950/20">
+        ENTERPRISE CORE SYSTEM — CORE ENGINE INTERACTIVE LABS © 2026
+    </footer>
+
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>
+

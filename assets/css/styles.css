@@ -1,0 +1,492 @@
+/* ==========================================================================
+   TITAN INTERFACE DESIGN SYSTEM — PRODUCTION MONOLITH
+   ========================================================================== 
+   Architecture: Ultra-Minimalist & Adaptive High-Contrast Responsive Dev Environment
+   Engine: Cubic-Bezier Kinetic Hardware-Accelerated Transitions
+   Inspirations: Linear / Raycast / Vercel Studio / Apple Lab
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght=400;500;600;700&family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap');
+
+/* ==========================================================================
+   1. REGISTRO GLOBAL DE VARIABLES (THEME TOKENS)
+   ========================================================================== */
+:root {
+    /* --- MODO OSCURO: ELEGANTE OSCURIDAD PREMIUM --- */
+    --bg-system: #090a0f;             /* Antracita cósmica profunda de baja frecuencia */
+    --surface-panel: #11131a;         /* Superficie monolítica con profundidad percibida */
+    --surface-card: #151821;          /* Variación de elevación para elementos grid/tarjetas */
+    --border-matrix: #222633;         /* Micro-bordes de titanio oscuro cepillado */
+    --border-glow: #3b82f6;           /* Color de enfoque interactivo */
+    
+    /* Tipografía Dinámica */
+    --text-main: #cdd6f4;             /* Blanco roto pastel de alto espectro y baja fatiga */
+    --text-muted: #6c7a9c;            /* Gris azulado apagado de nivel secundario */
+    --text-bold-titles: #ffffff;      /* Blanco cristal de alta luminancia */
+    
+    /* Tablas y Estructuras */
+    --table-header-bg: #12151f;       
+    --table-text: #e2e8f0;         
+    --table-text-bold: #60a5fa;       
+    --table-row-hover: rgba(38, 44, 64, 0.4); 
+    
+    /* Consola de Simulación Interactiva */
+    --terminal-screen-bg: #06070a;    
+    --terminal-bar-bg: #11131a;    
+    --terminal-line-border: #1d212d;
+    --terminal-text: #f8f9fa;
+    
+    /* Prompts de Consola */
+    --color-user: #34d399;            /* Verde menta tecnológico */
+    --color-dir: #38bdf8;             /* Azul cielo de terminal */
+    --blockquote-bg: rgba(244, 63, 94, 0.02); 
+    --blockquote-border: #f43f5e;
+
+    /* Micro-Animaciones */
+    --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-speed: 0.5s;
+}
+
+/* --- MODO CLARO: INMACULADO ESTUDIO ALPINO --- */
+html[data-theme="light"] {
+    --bg-system: #ffffff;             /* Blanco absoluto puro */
+    --surface-panel: #fafafa;         /* Gris de estudio fotográfico ultra limpio */
+    --surface-card: #ffffff;          /* Capas superiores en blanco puro */
+    --border-matrix: #e5e5e5;         /* Líneas de cuadrícula imperceptibles (Slate 200) */
+    --border-glow: #000000;           /* Enfoque contrastante minimalista */
+    
+    --text-main: #333333;             /* Carbón premium de alta densidad */
+    --text-muted: #8c8c8c;            /* Gris arquitectónico de soporte */
+    --text-bold-titles: #000000;      /* Negro total de tipografía de imprenta */
+    
+    --table-header-bg: #f5f5f5;      
+    --table-text: #262626;           
+    --table-text-bold: #2563eb;       /* Azul Klein interactivo */
+    --table-row-hover: #f1f1f1;      
+    
+    --terminal-screen-bg: #ffffff;   /* Terminal inmaculada blanca estilo macOS Developer */
+    --terminal-bar-bg: #f5f5f5;      
+    --terminal-line-border: #e5e5e5; 
+    --terminal-text: #1a1a1a;        
+    
+    --color-user: #059669;            /* Verde esmeralda profundo legible en blanco */
+    --color-dir: #2563eb;            
+    
+    --blockquote-bg: #fff5f5;
+    --blockquote-border: #e11d48;
+}
+
+/* ==========================================================================
+   2. REESTRUCTURACIÓN CORE & RESETEO CINÉTICO
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-system) !important;
+    color: var(--text-main);
+    letter-spacing: -0.015em;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color var(--transition-speed) var(--ease-premium), 
+                color var(--transition-speed) var(--ease-premium),
+                border-color var(--transition-speed) var(--ease-premium);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-matrix);
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* ==========================================================================
+   3. ARQUITECTURA TIPOGRÁFICA INTERNA
+   ========================================================================== */
+h1, h2, h3, h4, .text-white, [class*="text-zinc-100"] {
+    color: var(--text-bold-titles) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+}
+
+p, .text-zinc-400, .text-zinc-500, span.text-zinc-500, div.text-zinc-400 {
+    color: var(--text-muted) !important;
+    font-weight: 400;
+}
+
+strong, b {
+    color: var(--text-bold-titles);
+    font-weight: 600;
+}
+
+.mono, code, pre {
+    font-family: 'JetBrains Mono', monospace !important;
+    letter-spacing: -0.025em;
+}
+
+/* ==========================================================================
+   4. COMPONENTES ESTRUCTURALES PRINCIPALES (BORDES RESTAURADOS)
+   ========================================================================== */
+.main-header {
+    background-color: var(--surface-panel) !important;
+    border-color: var(--border-matrix) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 1px 0 var(--border-matrix);
+}
+
+header p, .header-logo-box + div p {
+    color: var(--color-dir) !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* Botones y Cajas del Sidebar Generales */
+.theme-btn, .sidebar-box {
+    background-color: var(--surface-panel) !important;
+    border: 1px solid var(--border-matrix) !important;
+    color: var(--text-main) !important;
+    transition: background-color 0.4s var(--ease-premium), 
+                border-color 0.4s var(--ease-premium);
+}
+
+/* Bloques de Selección: Permanecen estáticos con sus bordes originales */
+.grid-card-item {
+    background-color: var(--surface-card) !important;
+    border: 1px solid var(--border-matrix) !important;
+    border-radius: 12px !important; 
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.4s var(--ease-premium), 
+                border-color 0.4s var(--ease-premium);
+}
+
+.grid-card-item:hover {
+    transform: none !important; 
+    box-shadow: none !important;
+    border-color: var(--text-muted) !important;
+}
+
+html[data-theme="light"] .grid-card-item:hover {
+    border-color: var(--border-glow) !important;
+}
+
+/* Enlaces del Sidebar */
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s var(--ease-premium);
+}
+
+.nav-link:hover {
+    color: var(--text-bold-titles) !important;
+    background-color: var(--table-header-bg) !important;
+    transform: translateX(4px);
+}
+
+/* ==========================================================================
+   5. TABLAS DE DATOS TÉCNICOS
+   ========================================================================== */
+.overflow-x-auto {
+    border: 1px solid var(--border-matrix) !important;
+    border-radius: 8px;
+    background-color: var(--surface-panel);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+thead tr {
+    background-color: var(--table-header-bg) !important;
+    border-bottom: 1px solid var(--border-matrix) !important;
+}
+
+thead th {
+    color: var(--text-bold-titles) !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 14px 18px !important;
+}
+
+tbody tr {
+    border-bottom: 1px solid var(--border-matrix) !important;
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--table-row-hover) !important;
+}
+
+tbody td {
+    color: var(--table-text) !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 14px 18px !important;
+}
+
+tbody td:first-child {
+    font-weight: 600 !important;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+blockquote {
+    background-color: var(--blockquote-bg) !important;
+    border-left: 3px solid var(--blockquote-border) !important;
+    border-radius: 6px;
+    padding: 16px 20px !important;
+    margin: 20px 0 !important;
+}
+
+/* ==========================================================================
+   6. FÍSICA CINÉTICA AVANZADA EXCLUSIVA PARA LAS TERMINALES INTERACTIVAS
+   ========================================================================== */
+.console-box-wrapper {
+    background-color: var(--terminal-screen-bg) !important;
+    border: 1px solid var(--border-matrix) !important;
+    border-radius: 10px;
+    overflow: hidden;
+    
+    /* Estado base de la sombra: sutil y plana */
+    box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.3);
+    
+    /* Motor de renderizado suave optimizado mediante aceleración por hardware */
+    will-change: transform, box-shadow, border-color;
+    
+    /* Curva elástica premium de respuesta orgánica (Cubic-Bezier modificada) */
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.2, 1), 
+                box-shadow 0.6s cubic-bezier(0.25, 1, 0.2, 1),
+                background-color 0.5s var(--ease-premium), 
+                border-color 0.5s var(--ease-premium);
+}
+
+/* ¡EFECTO ELEVACIÓN + EXPANSIÓN SUAVE PREMIUM! */
+.console-box-wrapper:hover {
+    /* Eleva la terminal de forma flotante y expande uniformemente su escala un 1.2% */
+    transform: translateY(-6px) scale(1.012);
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    
+    /* Sombra difusa cinematográfica de alta gama para dar sensación real de volumen */
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.65);
+}
+
+/* Adaptación del efecto flotante sutil para pantallas claras */
+html[data-theme="light"] .console-box-wrapper:hover {
+    border-color: var(--border-glow) !important;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.08);
+}
+
+.console-header {
+    background-color: var(--terminal-bar-bg) !important;
+    border-bottom: 1px solid var(--terminal-line-border) !important;
+    padding: 12px 18px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.5s var(--ease-premium), border-color 0.5s var(--ease-premium);
+}
+
+.console-header span {
+    color: var(--text-muted) !important;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.console-header i {
+    color: var(--text-muted) !important;
+}
+
+.custom-terminal {
+    background-color: var(--terminal-screen-bg) !important;
+    color: var(--terminal-text) !important;
+    padding: 20px !important;
+    min-height: 160px;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    transition: background-color 0.5s var(--ease-premium), color 0.5s var(--ease-premium);
+}
+
+.custom-terminal div, .custom-terminal span.text-white {
+    color: var(--terminal-text) !important;
+}
+
+/* Motor de Cascada del flujo de texto interno */
+.terminal-stream-history div,
+.terminal-stream-history span {
+    animation: terminalLineCascade 0.4s var(--ease-premium) both;
+}
+
+@keyframes terminalLineCascade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-replay {
+    background-color: transparent !important;
+    border: 1px solid var(--terminal-line-border) !important;
+    color: var(--text-main) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 600 !important;
+    border-radius: 6px;
+    padding: 5px 14px !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-premium);
+}
+
+.btn-replay:hover {
+    border-color: var(--text-bold-titles) !important;
+    color: var(--text-bold-titles) !important;
+    background-color: var(--table-header-bg) !important;
+}
+
+.terminal-stream-history, .current-typing {
+    color: var(--terminal-text) !important;
+}
+
+.text-prompt-user { color: var(--color-user) !important; font-weight: 600; }
+.text-prompt-dir { color: var(--color-dir) !important; font-weight: 600; }
+
+.cursor {
+    display: inline-block;
+    width: 6px;
+    height: 15px;
+    background-color: var(--text-bold-titles);
+    vertical-align: middle;
+    margin-left: 5px;
+    animation: terminalCursorBlink 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes terminalCursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.1; }
+}
+
+/* ==========================================================================
+   7. ADAPTACIONES ANTICORRUPCIÓN DE TAILWIND CSS
+   ========================================================================== */
+html[data-theme="light"], 
+html[data-theme="light"] body, 
+html[data-theme="light"] .bg-zinc-950, 
+html[data-theme="light"] .bg-gray-950,
+html[data-theme="light"] .bg-black,
+html[data-theme="light"] .bg-zinc-900\/50,
+html[data-theme="light"] .bg-zinc-900 {
+    background-color: var(--bg-system) !important;
+}
+
+html[data-theme="light"] .text-white { color: var(--text-bold-titles) !important; }
+html[data-theme="light"] .text-zinc-300 { color: var(--text-main) !important; }
+html[data-theme="light"] .text-zinc-400 { color: var(--text-muted) !important; }
+html[data-theme="light"] .text-zinc-500 { color: var(--text-muted) !important; }
+
+html[data-theme="light"] .border-zinc-800, 
+html[data-theme="light"] .border-zinc-700,
+html[data-theme="light"] .border-zinc-900,
+html[data-theme="light"] .divide-zinc-800 > :not([hidden]) ~ :not([hidden]) { 
+    border-color: var(--border-matrix) !important; 
+}
+
+html[data-theme="light"] th {
+    background-color: var(--table-header-bg) !important;
+    color: var(--text-bold-titles) !important;
+    border-color: var(--border-matrix) !important;
+}
+
+html[data-theme="light"] td { 
+    border-color: var(--border-matrix) !important; 
+}
+
+html[data-theme="light"] .bg-zinc-950\/50,
+html[data-theme="light"] .bg-zinc-900\/20,
+html[data-theme="light"] .bg-zinc-900\/10 { 
+    background-color: var(--surface-panel) !important; 
+}
+
+html[data-theme="light"] .bg-zinc-950,
+html[data-theme="light"] .bg-black\/30,
+html[data-theme="light"] pre {
+    background-color: var(--surface-panel) !important;
+    border: 1px solid var(--border-matrix) !important;
+}
+
+html[data-theme="light"] .bg-zinc-950 div,
+html[data-theme="light"] .bg-black\/30 div,
+html[data-theme="light"] .bg-zinc-950 span,
+html[data-theme="light"] .bg-zinc-950 code,
+html[data-theme="light"] pre code {
+    color: var(--text-main) !important;
+}
+
+/* ==========================================================================
+   8. IDENTIDAD VISUAL INTEGRADA Y HUB CENTRAL
+   ========================================================================== */
+.header-logo-box {
+    background: var(--surface-panel) !important;
+    border: 1px solid var(--border-matrix) !important;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s var(--ease-premium), border-color 0.4s var(--ease-premium);
+}
+
+.linux-logo-svg { 
+    color: var(--text-bold-titles) !important; 
+    transition: color 0.4s ease; 
+}
+
+.header-logo-box:hover { 
+    transform: scale(1.05) rotate(2deg); 
+    border-color: var(--text-bold-titles) !important; 
+}
+
+[data-theme="light"] .tux-eye { fill: #000000 !important; }
+[data-theme="dark"] .tux-eye { fill: #ffffff !important; }
+
+.max-w-md.sidebar-box {
+    padding: 40px !important;
+    border-radius: 24px !important; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+html[data-theme="light"] .max-w-md.sidebar-box {
+    box-shadow: 0 30px 60px -15px rgba(0,0,0,0.06) !important;
+}
+

@@ -1,0 +1,95 @@
+\<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 4: La Shell de Linux — Enterprise Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500/30 bg-gray-950 text-slate-200">
+
+    <!-- Barra de progreso superior -->
+    <div class="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500"></div>
+
+    <!-- Encabezado -->
+    <header class="main-header border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="header-logo-box w-10 h-10 flex items-center justify-center shadow-md border border-zinc-700 rounded-xl overflow-hidden bg-zinc-800 hover:border-blue-500 transition-colors">
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C9.5 2 7 4 7 7.5C7 9.1 7.6 10.4 8.5 11.3C7.1 12.3 6 14 6 16C6 19.5 8.5 21 12 21C15.5 21 18 19.5 18 16C18 14 16.9 12.3 15.5 11.3C16.4 10.4 17 9.1 17 7.5C17 4 14.5 2 12 2Z" fill="currentColor"/>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-md font-bold tracking-tight text-white">Enterprise Linux Engine</h1>
+                    <p class="text-xs text-zinc-500 font-mono">// Secc. 4: La Shell de Linux</p>
+                </div>
+            </div>
+
+            <button id="theme-toggle" class="theme-btn px-4 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-300 flex items-center gap-2 text-xs font-mono font-bold uppercase transition-all hover:scale-[1.02]">
+                <i class="fas fa-sun text-amber-400"></i> <span>MODO CLARO</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl w-full mx-auto px-6 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+        
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sidebar-box sticky top-24 p-5 border border-zinc-800 rounded-2xl bg-zinc-900/30 space-y-4 backdrop-blur-sm">
+                <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono">Índice del Módulo</h3>
+                <nav class="space-y-1">
+                    <a href="#intro" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>🐚 1. La Shell de Linux</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#basicos" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>⚙️ 2. Comandos Básicos</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#documentacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>📚 3. Documentación</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#logica" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>⚡ 4. Expresiones Lógicas</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#alias" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>🏷️ 5. Alias y Rutas</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#atajos" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>⌨️ 6. Atajos de Teclado</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#cheatsheet" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>📋 7. Resumen Rápido</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="lg:col-span-3 space-y-8">
+
+            <!-- Aquí va todo el contenido de las secciones -->
+             <!-- ====================== SECCIÓN #: ############## ====================== -->
+
+
+    <div class="text-center pt-6">
+        <p class="text-xs text-zinc-500 font-mono">
+            ¡Fin de la Sección 4 — La Shell de Linux!<br>
+            <span class="text-emerald-400 font-bold">Practica en tu terminal y domina estos comandos.</span>
+        </p>
+    </div>
+
+</section>
+
+        </main>
+    </div>
+
+    <footer class="text-center font-mono text-[10px] tracking-widest text-zinc-600 py-8 border-t border-zinc-900 mt-12 bg-zinc-950/20">
+        ENTERPRISE CORE SYSTEM — CORE ENGINE INTERACTIVE LABS © 2026
+    </footer>
+
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>
+

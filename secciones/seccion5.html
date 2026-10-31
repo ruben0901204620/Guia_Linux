@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sección 5: Sistema de Ficheros de Linux — Enterprise Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-blue-500/30 bg-gray-950 text-slate-200">
+
+    <div class="h-1 w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500"></div>
+
+    <header class="main-header border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="header-logo-box w-10 h-10 flex items-center justify-center shadow-md border border-zinc-700 rounded-xl overflow-hidden bg-zinc-800 hover:border-blue-500 transition-colors">
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C9.5 2 7 4 7 7.5C7 9.1 7.6 10.4 8.5 11.3C7.1 12.3 6 14 6 16C6 19.5 8.5 21 12 21C15.5 21 18 19.5 18 16C18 14 16.9 12.3 15.5 11.3C16.4 10.4 17 9.1 17 7.5C17 4 14.5 2 12 2Z" fill="currentColor"/>
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-md font-bold tracking-tight text-white">Enterprise Linux Engine</h1>
+                    <p class="text-xs text-zinc-500 font-mono">// Secc. 5: Sistema de Ficheros de Linux</p>
+                </div>
+            </div>
+
+            <button id="theme-toggle" class="theme-btn px-4 py-2 rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-300 flex items-center gap-2 text-xs font-mono font-bold uppercase transition-all hover:scale-[1.02]">
+                <i class="fas fa-sun text-amber-400"></i> <span>MODO CLARO</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="max-w-7xl w-full mx-auto px-6 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8">
+        
+        <aside class="lg:col-span-1">
+            <div class="sidebar-box sticky top-24 p-5 border border-zinc-800 rounded-2xl bg-zinc-900/30 space-y-4 backdrop-blur-sm">
+                <h3 class="text-[11px] font-bold uppercase tracking-wider text-zinc-400 font-mono">Índice del Módulo</h3>
+                <nav class="space-y-1">
+                    <a href="#navegacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>🗺️ 1. Rutas Absolutas y Relativas</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#ficheros" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>📄 2. Tipos de Ficheros</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#creacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>🛠️ 3. Creación y Editores</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#visualizacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>👁️ 4. Visualización</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#manipulacion" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>✂️ 5. Manipulación de Archivos</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#busqueda" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>🔍 6. Métodos de Búsqueda</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#fhs" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>📂 7. Árbol y Estándar FHS</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                    <a href="#cheatsheet" class="nav-link w-full px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-between text-zinc-400 hover:bg-zinc-800 hover:text-white transition-all">
+                        <span>📋 8. Resumen Rápido</span><i class="fas fa-chevron-right text-[10px] opacity-40"></i>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="lg:col-span-3 space-y-8">
+
+            <section id="navegacion" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6 mb-8">
+                <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">1. Navegación: Rutas Absolutas y Relativas</h2>
+                <p class="text-sm text-zinc-300 leading-relaxed">
+                    En Linux todo el sistema de ficheros parte de un único directorio raíz llamado <code class="text-emerald-400 font-mono">/</code> (slash). Para moverte entre directorios debes entender la diferencia entre rutas absolutas y relativas.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 border border-zinc-800 bg-zinc-950/30 rounded-xl space-y-2">
+                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono">// Ruta ABSOLUTA</h4>
+                        <p class="text-sm text-zinc-200">Siempre empieza desde la raíz <code class="text-emerald-400">/</code>.</p>
+                        <p class="text-xs text-zinc-500 font-mono mt-1">Funciona sin importar donde estés actualmente.</p>
+                        <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 font-mono text-xs text-zinc-300 mt-2">
+                            $ cd /home/ruben/Escritorio/
+                        </div>
+                    </div>
+                    <div class="p-4 border border-zinc-800 bg-zinc-950/30 rounded-xl space-y-2">
+                        <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono">// Ruta RELATIVA</h4>
+                        <p class="text-sm text-zinc-200">Parte desde donde estás ahora mismo.</p>
+                        <p class="text-xs text-zinc-500 font-mono mt-1">Depende del directorio actual de trabajo.</p>
+                        <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 font-mono text-xs text-zinc-300 mt-2">
+                            $ cd Escritorio/
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider font-mono mt-6">Símbolos especiales de navegación</h4>
+                <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50">
+                    <table class="min-w-full text-sm text-left font-mono">
+                        <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                            <tr>
+                                <th class="p-4 w-1/4">Opción</th>
+                                <th class="p-4">Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-800 text-zinc-400">
+                            <tr>
+                                <td class="p-4 font-bold text-emerald-400 text-base">/</td>
+                                <td class="p-4 text-zinc-300">Directorio raíz del sistema. Punto de partida de todas las rutas absolutas.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-emerald-400 text-base">~</td>
+                                <td class="p-4 text-zinc-300">Directorio home del usuario actual. Equivalente a /home/usuario.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-emerald-400 text-base">.</td>
+                                <td class="p-4 text-zinc-300">El directorio actual en el que te encuentras.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-emerald-400 text-base">..</td>
+                                <td class="p-4 text-zinc-300">El directorio padre (un nivel arriba) del directorio actual.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-emerald-400 text-base">-</td>
+                                <td class="p-4 text-zinc-300">El directorio anterior (vuelve al último directorio visitado).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="space-y-6 pt-4 border-t border-zinc-800/80">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                            <h3 class="text-lg font-bold text-white font-mono">pwd — Print Working Directory</h3>
+                        </div>
+                        <p class="text-sm text-zinc-300">Muestra la ruta absoluta de la ubicación de trabajo actual.</p>
+                        <div class="console-box-wrapper">
+                            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // pwd-check</span>
+                                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                            </div>
+                            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="pwd-check">
+                                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                            <h3 class="text-lg font-bold text-white font-mono">cd / — Ir a la Raíz</h3>
+                        </div>
+                        <div class="console-box-wrapper">
+                            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cd-root</span>
+                                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                            </div>
+                            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cd-root">
+                                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                            <h3 class="text-lg font-bold text-white font-mono">cd Escritorio/ — Navegación Relativa</h3>
+                        </div>
+                        <div class="console-box-wrapper">
+                            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cd-relative</span>
+                                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                            </div>
+                            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cd-relative">
+                                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                            <h3 class="text-lg font-bold text-white font-mono">cd .. — Directorio Padre</h3>
+                        </div>
+                        <div class="console-box-wrapper">
+                            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cd-father</span>
+                                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                            </div>
+                            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cd-father">
+                                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                                <div class="flex items-center gap-2 mt-2">
+                                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+        <div class="space-y-2">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                <h3 class="text-lg font-bold text-white font-mono">cd ~ — Regresar al Home</h3>
+            </div>
+            <div class="console-box-wrapper">
+                <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                    <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cd-home</span>
+                    <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                </div>
+                <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cd-home">
+                    <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                        <span class="current-typing text-white"></span><span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                <h3 class="text-lg font-bold text-white font-mono">cd - — Directorio Anterior</h3>
+            </div>
+            <div class="console-box-wrapper">
+                <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                    <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cd-previous</span>
+                    <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+                </div>
+                <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cd-previous">
+                    <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                        <span class="current-typing text-white"></span><span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-4 border-l-4 border-amber-500 bg-amber-500/10 rounded-r-xl space-y-2 font-mono text-xs">
+        <h5 class="font-bold text-amber-400 uppercase tracking-wider">Diferencia entre cd . y cd ..</h5>
+        <ul class="list-disc pl-4 space-y-1 text-zinc-300">
+            <li><code class="text-emerald-400 font-bold">cd .</code> &rarr; Se mantiene en la misma posición (no genera cambios prácticos).</li>
+            <li><code class="text-emerald-400 font-bold">cd ..</code> &rarr; Retorna un nivel hacia la estructura contenedora padre.</li>
+        </ul>
+    </div>
+</section>
+
+<section id="ficheros-tipo" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6 mb-8">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">2. Ficheros en Linux</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            En Linux <span class="text-emerald-400 font-semibold">"todo es un fichero"</span>: los directorios, dispositivos, procesos, conexiones de red... todo se representa y gestiona de manera unificada bajo la misma abstracción dentro del sistema[cite: 40].
+        </p>
+    </div>
+
+    <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/40 p-4 space-y-3">
+        <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono">Tipos de Ficheros en el Sistema [cite: 42]</h4>
+        <table class="w-full text-left border-collapse text-xs sm:text-sm font-mono text-zinc-300">
+            <thead>
+                <tr class="border-b border-zinc-800 text-zinc-500 text-xs">
+                    <th class="py-2 px-3">Tipo / Opción [cite: 43]</th>
+                    <th class="py-2 px-3">Descripción [cite: 43]</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/40">
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Fichero regular [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">El tipo más común: texto, binarios, scripts, imágenes, etc. [cite: 43]</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Directorio [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Un fichero especial que contiene referencias a otros ficheros[cite: 43].</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Enlace simbólico [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Un puntero (acceso directo) que apunta a otro fichero o directorio[cite: 43].</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Fichero de bloque [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Representa dispositivos de almacenamiento físico como discos duros (<code class="text-xs text-sky-400">/dev/sda</code>)[cite: 43].</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Fichero de carácter [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Representa dispositivos de flujo secuencial como terminales o puertos serie[cite: 43].</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Socket [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Canal de red o socket local usado para comunicación interna entre procesos[cite: 43].</td>
+                </tr>
+                <tr>
+                    <td class="py-2.5 px-3 font-bold text-white">Named pipe (FIFO) [cite: 43]</td>
+                    <td class="py-2.5 px-3 text-zinc-400">Canal de comunicación unidireccional entre procesos en estricto orden FIFO[cite: 43].</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">ls — Listar Contenido Básico </h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Permite visualizar los archivos presentes en el directorio actual. Dependiendo de la distribución, el nombre de los directorios predeterminados del Home del usuario puede variar.
+            </p>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // ls-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="ls-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
+            <div class="p-3 bg-red-950/10 border border-red-900/30 rounded-xl">
+                <span class="text-red-400 font-bold"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu </span>
+                <p class="text-zinc-400 mt-1">El Home mapea carpetas traducidas en español de manera predeterminada como <code class="text-zinc-300">Escritorio/</code>.</p>
+            </div>
+            <div class="p-3 bg-blue-950/10 border border-blue-900/30 rounded-xl">
+                <span class="text-sky-400 font-bold"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux </span>
+                <p class="text-zinc-400 mt-1">Por defecto las rutas de entorno e inicialización se configuran estrictamente en inglés como <code class="text-zinc-300">Desktop/</code>.</p>
+            </div>
+            <div class="p-3 bg-cyan-950/10 border border-cyan-900/30 rounded-xl">
+                <span class="text-cyan-400 font-bold"><i class="fab fa-fedora text-blue-500"></i> Fedora </span>
+                <p class="text-zinc-400 mt-1">Suele heredar los localismos completos del instalador de sistema, asignando <code class="text-zinc-300">Escritorio/</code>.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">ls -la — Listar Todo Detalladamente [cite: 105, 106]</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Despliega una vista extendida incluyendo permisos, tamaños legibles y ficheros ocultos (aquellos cuyo nombre arranca por un punto (<code class="text-xs text-zinc-300">.</code>))[cite: 105, 106].
+            </p>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // ls-la</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[120px]" data-sim-id="ls-la">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">tree — Árbol de Directorios [cite: 19]</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Muestra de forma jerárquica y visual la arquitectura interna de un directorio sin tener que navegar iterativamente con comandos secuenciales[cite: 22, 24]. <span class="text-yellow-500 font-bold">Nota de Dependencia:</span> No suele venir preinstalado nativamente en los entornos mínimos[cite: 26].
+            </p>
+        </div>
+
+        <div class="overflow-x-auto border border-zinc-800/60 rounded-xl bg-zinc-950/20 p-3">
+            <table class="w-full text-left text-xs font-mono text-zinc-400">
+                <thead>
+                    <tr class="text-zinc-500 border-b border-zinc-800"><th class="pb-1 px-2">Opción [cite: 28]</th><th class="pb-1 px-2">Efecto Operativo [cite: 28]</th></tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40">
+                    <tr><td class="py-1 px-2 text-white font-bold">-L [n] [cite: 28]</td><td class="py-1 px-2">Limita el árbol a n niveles de profundidad de escaneo (Ej: <code class="text-zinc-300">tree -L 2 /</code>)[cite: 28].</td></tr>
+                    <tr><td class="py-1 px-2 text-white font-bold">-d [cite: 28]</td><td class="py-1 px-2">Omite el listado de archivos individuales; despliega únicamente los directorios[cite: 28].</td></tr>
+                    <tr><td class="py-1 px-2 text-white font-bold">-a [cite: 28]</td><td class="py-1 px-2">Fuerza la inclusión de ramas que contengan ficheros ocultos dentro de la estructura[cite: 28].</td></tr>
+                    <tr><td class="py-1 px-2 text-white font-bold">-h [cite: 28]</td><td class="py-1 px-2">Acompaña las etiquetas de tamaño con formato legible para humanos (KB, MB, GB)[cite: 28].</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // tree-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[120px]" data-sim-id="tree-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] font-mono">
+            <div class="p-2.5 bg-zinc-900/40 border border-zinc-800 rounded-lg">
+                <span class="text-zinc-300 font-bold block mb-1">📦 APT (Debian/Ubuntu) [cite: 26]</span>
+                <code class="text-red-400 block bg-black/30 p-1 rounded">$ sudo apt install tree</code> [cite: 21]
+            </div>
+            <div class="p-2.5 bg-zinc-900/40 border border-zinc-800 rounded-lg">
+                <span class="text-zinc-300 font-bold block mb-1">📦 PACMAN (Arch Linux) [cite: 26]</span>
+                <code class="text-sky-400 block bg-black/30 p-1 rounded">$ sudo pacman -S tree</code> [cite: 26]
+            </div>
+            <div class="p-2.5 bg-zinc-900/40 border border-zinc-800 rounded-lg">
+                <span class="text-zinc-300 font-bold block mb-1">📦 DNF (Fedora) [cite: 26]</span>
+                <code class="text-cyan-400 block bg-black/30 p-1 rounded">$ sudo dnf install tree</code> [cite: 26]
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">file — Firma E Identidad de Ficheros [cite: 44]</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Determina de forma precisa la naturaleza de un elemento analizando su cabecera y búfer de metadatos internos[cite: 46]. <span class="text-emerald-400 font-semibold">Recuerda:</span> Linux es agnóstico a las extensiones; un archivo <code class="text-xs text-zinc-300">.jpeg</code> renombrado a <code class="text-xs text-zinc-300">.txt</code> seguirá siendo detectado por su tipo real[cite: 47, 49].
+            </p>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // file-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="file-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-zinc-950/60 border border-zinc-800 rounded-xl space-y-2">
+            <span class="text-xs font-bold font-mono text-zinc-400 block uppercase tracking-wider">Resultados Típicos de Inspección en Logs e Imágenes </span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1.5 text-xs font-mono text-zinc-300">
+                <div class="flex justify-between border-b border-zinc-900 pb-1">
+                    <span class="text-amber-400">auth.log </span>
+                    <span class="text-zinc-500">→ ASCII text (Texto Plano) </span>
+                </div>
+                <div class="flex justify-between border-b border-zinc-900 pb-1">
+                    <span class="text-amber-400">lastlog </span>
+                    <span class="text-zinc-500">→ data (Fichero Binario) </span>
+                </div>
+                <div class="flex justify-between border-b border-zinc-900 pb-1">
+                    <span class="text-amber-400">images.jpeg </span>
+                    <span class="text-zinc-500">→ JPEG image data (Imagen Mapeada) </span>
+                </div>
+                <div class="flex justify-between border-b border-zinc-900 pb-1">
+                    <span class="text-amber-400">/bin/bash </span>
+                    <span class="text-zinc-500">→ ELF 64-bit executable (Binario Nativo) </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="creacion-editores" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6 mb-8">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">3. Creación de Ficheros y Editores de Texto</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Asignación de espacio lógico, inicialización de estructuras de directorios y manipulación de buffers de texto plano directamente en el sistema de archivos. Linux ofrece múltiples editores internos con características y curvas de aprendizaje adaptadas a cada necesidad[cite: 64, 65].
+        </p>
+    </div>
+
+    <div class="p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-3 font-mono text-xs">
+        <i class="fas fa-exclamation-triangle text-amber-500 mt-0.5 text-sm"></i>
+        <div class="space-y-1">
+            <span class="text-amber-400 font-bold uppercase tracking-wider block">Sensibilidad a Mayúsculas (Case Sensitive)</span>
+            <p class="text-zinc-400 leading-relaxed">
+                El sistema de archivos de Linux distingue estrictamente entre mayúsculas y minúsculas. Por ejemplo, las carpetas <code class="text-zinc-200 font-bold bg-zinc-950 px-1 rounded">test</code> y <code class="text-zinc-200 font-bold bg-zinc-950 px-1 rounded">Test</code> son tratadas como directorios totalmente distintos e independientes.
+            </p>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">mkdir — Make Directory</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Crea uno o varios directorios dentro del árbol jerárquico del sistema[cite: 56, 59].
+            </p>
+        </div>
+
+        <div class="overflow-x-auto border border-zinc-800/60 rounded-xl bg-zinc-950/20 p-3">
+            <table class="w-full text-left text-xs font-mono text-zinc-400">
+                <thead>
+                    <tr class="text-zinc-500 border-b border-zinc-800"><th class="pb-1 px-2">Opción</th><th class="pb-1 px-2">Efecto Operativo</th></tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40">
+                    <tr>
+                        <td class="py-2 px-2 text-white font-bold">-p</td>
+                        <td class="py-2 px-2 text-zinc-400">Crea directorios padres intermedios de forma automática si no existen, evitando errores si la ruta ya está creada.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 px-2 text-white font-bold">-v</td>
+                        <td class="py-2 px-2 text-zinc-400">Modo informativo (Verbose): Imprime un mensaje de confirmación por cada directorio creado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // mkdir-simple</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="mkdir-simple">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // mkdir-parents</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="mkdir-parents">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-3 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-sm font-bold text-zinc-400 uppercase tracking-wider font-mono">Ecosistema de Editores de Texto en Linux</h3>
+            <p class="text-xs text-zinc-400">Diferentes entornos de software disponibles para administrar archivos sin salir de la shell[cite: 63, 64]:</p>
+        </div>
+
+        <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/40 p-4">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm font-mono text-zinc-300">
+                <thead>
+                    <tr class="border-b border-zinc-800 text-zinc-500 text-xs">
+                        <th class="py-2 px-3">Editor</th>
+                        <th class="py-2 px-2 text-center">Dificultad</th>
+                        <th class="py-2 px-3">Descripción y Uso Básico</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40 text-xs">
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-emerald-400">nano</td>
+                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 bg-green-950/40 text-green-400 border border-green-900 rounded text-[10px] font-bold uppercase">Fácil</span></td>
+                        <td class="py-3 px-3 text-zinc-400">El más intuitivo para principiantes. Expone su barra de atajos visibles en la parte inferior de la pantalla[cite: 66, 70]. Salida rápida con <code class="text-zinc-200">Ctrl+X</code>.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-teal-400">pico</td>
+                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 bg-green-950/40 text-green-400 border border-green-900 rounded text-[10px] font-bold uppercase">Fácil</span></td>
+                        <td class="py-3 px-3 text-zinc-400">Antecesor histórico de nano. En entornos actuales suele estar enlazado o redirigido directamente a nano debido a su uso equivalente.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-amber-400">vi / vim</td>
+                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 bg-red-950/40 text-red-400 border border-red-900 rounded text-[10px] font-bold uppercase">Avanzado</span></td>
+                        <td class="py-3 px-3 text-zinc-400">Herramienta de edición por modos (*Normal, Inserción, Visual*). Requiere pulsar <code class="text-zinc-200">i</code> para insertar datos , <code class="text-zinc-200">:q!</code> para salir sin salvar  y <code class="text-zinc-200">:wq</code> para guardar.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-sky-400">emacs</td>
+                        <td class="py-3 px-2 text-center"><span class="px-2 py-0.5 bg-red-950/40 text-red-400 border border-red-900 rounded text-[10px] font-bold uppercase">Avanzado</span></td>
+                        <td class="py-3 px-3 text-zinc-400">Extensible y complejo. Se puede invocar en interfaz gráfica o en consola con la bandera <code class="text-zinc-300">-nw</code>. Finaliza ejecución mediante <code class="text-zinc-200">Ctrl+X Ctrl+C</code>.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">nano — Editor Recomendado para Principiantes</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Descripción:</span> Permite inicializar o modificar documentos de texto plano[cite: 72]. Si el archivo especificado no existe en la ruta de trabajo, nano lo creará automáticamente al confirmar el guardado de los búfers[cite: 73].
+            </p>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // nano-edit</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="nano-edit">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-zinc-950/60 border border-zinc-800 rounded-xl space-y-2">
+            <span class="text-xs font-bold font-mono text-zinc-400 block uppercase tracking-wider">Atajos Operativos Esenciales (Combinaciones Clave)</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono text-zinc-300">
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/50 rounded-lg text-center">
+                    <code class="text-emerald-400 font-bold block mb-0.5">Ctrl + O</code>
+                    <span class="text-zinc-500 text-[11px]">Guardar archivo </span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/50 rounded-lg text-center">
+                    <code class="text-rose-400 font-bold block mb-0.5">Ctrl + X</code>
+                    <span class="text-zinc-500 text-[11px]">Salir del editor </span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/50 rounded-lg text-center">
+                    <code class="text-sky-400 font-bold block mb-0.5">Ctrl + K</code>
+                    <span class="text-zinc-500 text-[11px]">Cortar línea </span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/50 rounded-lg text-center">
+                    <code class="text-amber-400 font-bold block mb-0.5">Ctrl + W</code>
+                    <span class="text-zinc-500 text-[11px]">Buscar palabra </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] font-mono">
+            <div class="p-3 bg-red-950/10 border border-red-900/30 rounded-xl">
+                <span class="text-red-400 font-bold block mb-1"><i class="fab fa-ubuntu text-orange-500"></i> Debian / Ubuntu</span>
+                <p class="text-zinc-400 mb-2">Viene incorporado de forma nativa e integrada por defecto en el sistema operativo.</p>
+            </div>
+            <div class="p-3 bg-blue-950/10 border border-blue-900/30 rounded-xl">
+                <span class="text-sky-400 font-bold block mb-1"><i class="fas fa-laptop-code text-[#1793D1]"></i> Arch Linux</span>
+                <p class="text-zinc-400 mb-2">Puede no venir preinstalado en despliegues mínimos. Requiere instalación manual:</p>
+                <code class="text-sky-400 block bg-black/40 p-1 rounded">$ sudo pacman -S nano</code>
+            </div>
+            <div class="p-3 bg-cyan-950/10 border border-cyan-900/30 rounded-xl">
+                <span class="text-cyan-400 font-bold block mb-1"><i class="fab fa-fedora text-blue-500"></i> Fedora</span>
+                <p class="text-zinc-400 mb-2">No se incluye en ciertas imágenes Core. Requiere aprovisionamiento explícito:</p>
+                <code class="text-cyan-400 block bg-black/40 p-1 rounded">$ sudo dnf install nano</code>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="visualizacion" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6 mb-8">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">4. Visualización de Contenido</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Inspección del contenido interno de los ficheros de datos directamente en la consola sin necesidad de editores de texto[cite: 77]. Linux implementa comandos diferenciados según el volumen de datos y la libertad de navegación requerida en el búfer[cite: 78].
+        </p>
+    </div>
+
+    <div class="space-y-3 border-t border-zinc-800/60 pt-4">
+        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono block">Matriz Operativa: Diferencias entre cat, more y less</span>
+        <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/40 p-4">
+            <table class="w-full text-left border-collapse text-xs font-mono text-zinc-300">
+                <thead>
+                    <tr class="border-b border-zinc-800 text-zinc-500 text-[11px]">
+                        <th class="py-2 px-3">Comando</th>
+                        <th class="py-2 px-3">Comportamiento Operativo</th>
+                        <th class="py-2 px-3">Caso de Uso Recomendado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40 text-xs">
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-emerald-400">cat</td>
+                        <td class="py-3 px-3 text-zinc-400">Vuelca la totalidad del contenido del archivo en la terminal de una sola vez[cite: 81].</td>
+                        <td class="py-3 px-3 text-zinc-500">Lectura rápida de ficheros de texto pequeños[cite: 84].</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-amber-400">more</td>
+                        <td class="py-3 px-3 text-zinc-400">Paginación secuencial básica. Solo permite avanzar hacia adelante[cite: 91].</td>
+                        <td class="py-3 px-3 text-zinc-500">Alternativa básica integrada para archivos medianos[cite: 91, 93].</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-sky-400">less</td>
+                        <td class="py-3 px-3 text-zinc-300 font-semibold">Paginación avanzada con navegación bidireccional libre y búsquedas[cite: 99].</td>
+                        <td class="py-3 px-3 text-emerald-400/80 font-medium">Recomendado para ficheros grandes, documentación larga y logs del sistema[cite: 103, 106].</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">cat — Concatenate</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">cat [fichero]</code> [cite: 83] | Su nombre deriva de "concatenate", debido a su capacidad intrínseca para unificar múltiples flujos de archivos[cite: 82]. 
+            </p>
+            <div class="text-[11px] text-amber-400/90 font-mono bg-amber-500/5 border border-amber-500/10 p-2 rounded-lg mt-1">
+                ⚠️ <span class="font-bold">Advertencia de rendimiento:</span> No es idóneo para archivos de gran escala (como logs masivos), ya que arroja todo el flujo sin pausas ni control visual en la pantalla.
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cat-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cat-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">more — Visualización Paginada Básica</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">more [fichero]</code> [cite: 92] | Segmenta el contenido en bloques según el tamaño vertical de la terminal activa, deteniendo el flujo al final de cada página[cite: 90]. Su principal limitación es la imposibilidad de retroceder en el historial de lectura[cite: 91, 94].
+            </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-[11px] font-mono text-zinc-300 max-w-xl">
+            <div class="p-2 bg-zinc-950/40 border border-zinc-800 rounded-lg flex items-center justify-between">
+                <span class="text-zinc-500">Siguiente Página:</span>
+                <code class="text-amber-400 font-bold bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">Espacio</code> [cite: 96]
+            </div>
+            <div class="p-2 bg-zinc-950/40 border border-zinc-800 rounded-lg flex items-center justify-between">
+                <span class="text-zinc-500">Siguiente Línea:</span>
+                <code class="text-amber-400 font-bold bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">Enter</code> [cite: 96]
+            </div>
+            <div class="p-2 bg-zinc-950/40 border border-zinc-800 rounded-lg flex items-center justify-between">
+                <span class="text-zinc-500">Terminar/Salir:</span>
+                <code class="text-rose-400 font-bold bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">q</code> [cite: 96]
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // more-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="more-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">less — Visualización Paginada Avanzada</h3>
+            <p class="text-xs text-zinc-400">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">less [fichero]</code> [cite: 101] | Constituye un programa binario externo independiente (no builtin) que se erige como la evolución directa y optimizada de <code class="text-zinc-400">more</code>[cite: 100]. Garantiza navegación libre interactiva en todas las direcciones dentro del búfer de datos[cite: 99].
+            </p>
+        </div>
+
+        <div class="p-3 bg-zinc-950/60 border border-zinc-800 rounded-xl space-y-2">
+            <span class="text-[11px] font-bold font-mono text-zinc-500 block uppercase tracking-wider">Atajos Operativos de Interfaz (Navegación Interactiva)</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs font-mono text-zinc-300">
+                <div class="p-2 bg-zinc-900/30 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-sky-400 font-bold block mb-0.5">Flechas / j / k</code> [cite: 105]
+                    <span class="text-zinc-500 text-[10px]">Desplazar línea a línea</span> [cite: 105]
+                </div>
+                <div class="p-2 bg-zinc-900/30 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-sky-400 font-bold block mb-0.5">Espacio / b</code> [cite: 105]
+                    <span class="text-zinc-500 text-[10px]">Avanzar / Retroceder Página</span> [cite: 105]
+                </div>
+                <div class="p-2 bg-zinc-900/30 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-emerald-400 font-bold block mb-0.5">/palabra</code> [cite: 105]
+                    <span class="text-zinc-500 text-[10px]">Buscar cadena en el texto</span> [cite: 105]
+                </div>
+                <div class="p-2 bg-zinc-900/30 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-amber-400 font-bold block mb-0.5">n / N</code> [cite: 105]
+                    <span class="text-zinc-500 text-[10px]">Resultado sig / ant</span> [cite: 105]
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-blue-950/10 border border-blue-900/20 rounded-xl flex items-center justify-between text-[11px] font-mono">
+            <div class="space-y-0.5">
+                <span class="text-sky-400 font-bold block">Disponibilidad en Distribuciones</span>
+                <p class="text-zinc-400">Si bien se incluye de forma estándar, en despliegues mínimos de Arch Linux se instala manualmente mediante administradores de paquetes[cite: 105]:</p>
+            </div>
+            <code class="text-sky-400 bg-black/40 p-1.5 rounded border border-blue-950">$ sudo pacman -S less</code> [cite: 105]
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // less-check</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="less-check">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="manipulacion-busqueda" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">5. Manipulación, Borrado y Búsqueda</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Operaciones transaccionales básicas sobre la estructura de inodos para mover, duplicar, purgar o localizar ficheros de datos dentro del árbol jerárquico del sistema[cite: 107].
+        </p>
+    </div>
+
+    <div class="space-y-3 border-t border-zinc-800/60 pt-4">
+        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono block">Matriz de Comportamiento: cp vs mv</span>
+        <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/40 p-4">
+            <table class="w-full text-left border-collapse text-xs font-mono text-zinc-300">
+                <thead>
+                    <tr class="border-b border-zinc-800 text-zinc-500 text-[11px]">
+                        <th class="py-2 px-3">Comando</th>
+                        <th class="py-2 px-3">Efecto en el Fichero Original</th>
+                        <th class="py-2 px-3">Acción en Destino</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40 text-xs">
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-emerald-400">cp</td>
+                        <td class="py-3 px-3 text-zinc-400">Lo deja completamente intacto en su ruta raíz[cite: 128].</td>
+                        <td class="py-3 px-3 text-zinc-500">Duplica y genera un nuevo registro binario independiente[cite: 112].</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-sky-400">mv</td>
+                        <td class="py-3 px-3 text-rose-400/90">Lo elimina de la ubicación de origen de forma inmediata[cite: 124, 128].</td>
+                        <td class="py-3 px-3 text-zinc-300">Lo coloca en la nueva ruta o cambia su nombre (renombrado)[cite: 121, 128].</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">cp — Copiar Fichero (Copy)</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">cp [opciones] origen destino</code> | Duplica un archivo regular en otra ubicación[cite: 111, 112]. Por defecto, si el destino ya existe, lo sobrescribe sin emitir advertencias previas[cite: 115].
+            </p>
+            <div class="text-[11px] font-mono grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
+                <div class="text-amber-400/90 bg-amber-500/5 border border-amber-500/10 p-2 rounded-lg">
+                    ⚠️ <span class="font-bold">Modo Seguro (-i):</span> Añade confirmación interactiva antes de sobrescribir[cite: 113, 117].
+                </div>
+                <div class="text-zinc-400 bg-zinc-950/60 border border-zinc-800 p-2 rounded-lg">
+                    📋 <span class="font-bold text-zinc-300">Atributos (-p):</span> Conserva permisos estructurales, propietarios y marcas de tiempo originales[cite: 117].
+                </div>
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cp-file</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cp-file">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">cp -r — Copia Recursiva de Carpetas</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                El comando base <code class="text-zinc-300">cp</code> no es capaz de procesar directorios de forma nativa e interrumpe el flujo emitiendo un error[cite: 110, 135]. Es imperativo inyectar el flag <code class="text-emerald-400 font-bold">-r</code> o <code class="text-emerald-400 font-bold">--recursive</code> para replicar jerárquicamente carpetas enteras y todo su contenido interno[cite: 110, 117].
+            </p>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // cp-dir</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="cp-dir">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">mv — Mover o Renombrar (Move / Rename)</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">mv [opciones] origen destino</code> | Reubica archivos o directorios dentro del árbol de almacenamiento[cite: 120]. Si la operación se ejecuta dentro de la misma ruta de trabajo pero asignando un nombre diferente, actúa de forma nativa como una rutina de **renombrado**[cite: 121, 126].
+            </p>
+            <div class="text-[11px] text-zinc-400 font-mono bg-zinc-950/40 border border-zinc-800 p-2 rounded-lg max-w-xl">
+                ⚙️ <span class="text-zinc-300 font-semibold">Flag estratégico (-u / Update):</span> Mueve de manera selectiva únicamente si el archivo origen cuenta con una fecha de modificación más reciente que el fichero homónimo en el destino[cite: 127].
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // mv-file</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="mv-file">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">rm — Eliminar Archivo (Remove)</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">rm [opciones] fichero</code> | Elimina registros de datos de forma directa y permanente[cite: 131].
+            </p>
+            <div class="text-[11px] text-rose-400 font-mono bg-rose-500/5 border border-rose-500/10 p-3 rounded-xl">
+                🛑 <span class="font-bold">Principio Crítico de la Consola:</span> En la terminal de Linux <span class="underline decoration-wavy">no existe papelera de reciclaje</span>[cite: 131, 137]. Cualquier borrado es irreversible y purga las referencias de almacenamiento del sistema para siempre[cite: 131, 137]. Para directorios completos, arrojará un error a menos que se use el flag de recursividad <code class="text-white bg-zinc-900 px-1 rounded">-r</code>[cite: 135, 137].
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // rm-file</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="rm-file">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-rose-400 font-mono">rm -rf — Eliminación Forzada (Crítico)</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                Fusión destructiva de los modificadores <code class="text-zinc-200 font-bold">-r</code> (recursivo) y <code class="text-zinc-200 font-bold">-f</code> (fuerza)[cite: 136]. Ordena al sistema la purga total de estructuras de directorios completas, anulando de forma absoluta cualquier confirmación interactiva o alerta por archivos inexistentes[cite: 136].
+            </p>
+            <div class="text-[11px] text-amber-500 font-mono bg-amber-500/5 border border-amber-500/20 p-2 rounded-lg font-medium">
+                🚨 <span class="font-bold uppercase">Restricción Absoluta:</span> Jamás ejecute un comando estructurado como <code class="text-rose-400 font-bold bg-black px-1 rounded">rm -rf /</code>, ya que iniciará la destrucción en cadena de la totalidad del sistema de ficheros desde el directorio raíz[cite: 137].
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // rm-rf</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="rm-rf">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-1">
+            <h3 class="text-base font-bold text-white font-mono">find — Búsqueda Avanzada Multi-Criterio</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Uso:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">find [directorio_inicio] [criterios]</code> | Rastrea de forma exhaustiva el almacenamiento aplicando filtros dinámicos como patrones de nombres, tipo de objeto, propietarios o tamaños[cite: 141, 142].
+            </p>
+        </div>
+
+        <div class="p-4 bg-zinc-950/60 border border-zinc-800 rounded-xl space-y-3 font-mono">
+            <span class="text-[11px] font-bold text-zinc-500 block uppercase tracking-wider">Modificadores Avanzados de Rastreo</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div class="p-2.5 bg-zinc-900/40 border border-zinc-800/80 rounded-lg space-y-1">
+                    <code class="text-emerald-400 font-bold block">-name / -iname</code>
+                    <span class="text-zinc-400 text-[11px]">Filtra por nombre completo o patrón con comodines (*). <code class="text-zinc-500 text-[10px]">-iname</code> ignora mayúsculas[cite: 147].</span>
+                </div>
+                <div class="p-2.5 bg-zinc-900/40 border border-zinc-800/80 rounded-lg space-y-1">
+                    <code class="text-sky-400 font-bold block">-type f / -type d</code>
+                    <span class="text-zinc-400 text-[11px]">Segmenta la salida discriminando por tipo de inodo: <code class="text-zinc-400">f</code> para ficheros regulares o <code class="text-zinc-400">d</code> para directorios[cite: 147].</span>
+                </div>
+                <div class="p-2.5 bg-zinc-900/40 border border-zinc-800/80 rounded-lg space-y-1">
+                    <code class="text-amber-400 font-bold block">2&gt; /dev/null</code>
+                    <span class="text-zinc-400 text-[11px]">Redirige los flujos de error (ej: 'Permission denied') hacia el dispositivo virtual nulo, limpiando el output[cite: 147].</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // find-name</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="find-name">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">user@machine</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">#</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="busqueda" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">6. Métodos de Búsqueda Exhaustiva</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Localización avanzada e indexación en tiempo real de recursos del sistema. Linux provee herramientas para auditar inodos basándose tanto en metadatos del archivo como en expresiones regulares aplicadas a su contenido interno.
+        </p>
+    </div>
+
+    <div class="space-y-3 border-t border-zinc-800/60 pt-4">
+        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider font-mono block">Estrategias de Rastreo: Infraestructura vs Contenido</span>
+        <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-zinc-950/40 p-4">
+            <table class="w-full text-left border-collapse text-xs font-mono text-zinc-300">
+                <thead>
+                    <tr class="border-b border-zinc-800 text-zinc-500 text-[11px]">
+                        <th class="py-2 px-3">Herramienta</th>
+                        <th class="py-2 px-3">Mecánica de Rastreo</th>
+                        <th class="py-2 px-3">Criterios Clave de Filtrado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-800/40 text-xs">
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-sky-400">find</td>
+                        <td class="py-3 px-3 text-zinc-400">Inspecciona el sistema de archivos buscando objetos que coincidan con metadatos específicos.</td>
+                        <td class="py-3 px-3 text-zinc-500">Nombre, extensión, permisos, tamaño, inodos, fechas de modificación.</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3 px-3 font-bold text-emerald-400">grep</td>
+                        <td class="py-3 px-3 text-zinc-400">Escanea líneas de texto plano dentro de ficheros buscando patrones o expresiones regulares.</td>
+                        <td class="py-3 px-3 text-zinc-500">Cadenas de caracteres, palabras exactas, exclusión de líneas, patrones Regex.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-2">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 bg-blue-500/10 text-blue-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                <h3 class="text-xl font-bold text-white font-mono">find — Auditoría de Metadatos</h3>
+            </div>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Sintaxis:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">find [ruta_búsqueda] [criterios]</code><br>
+                Escanea de manera recursiva e interactiva el árbol de directorios cruzando restricciones lógicas complejas en tiempo real.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
+            <div class="p-3 bg-zinc-950/40 border border-zinc-800 rounded-xl space-y-1">
+                <span class="text-zinc-300 font-bold block">Filtros por Atributo Físico</span>
+                <ul class="text-zinc-400 space-y-1 list-disc list-inside">
+                    <li><code class="text-sky-400 font-bold">-size +50M</code>: Archivos de tamaño mayor a 50 Megabytes.</li>
+                    <li><code class="text-sky-400 font-bold">-mtime -7</code>: Modificados en los últimos 7 días.</li>
+                    <li><code class="text-sky-400 font-bold">-user root</code>: Recursos que pertenezcan al usuario root.</li>
+                </ul>
+            </div>
+            <div class="p-3 bg-zinc-950/40 border border-zinc-800 rounded-xl space-y-1">
+                <span class="text-zinc-300 font-bold block">Filtrado Seguro de Mensajes</span>
+                <p class="text-zinc-400 leading-relaxed">
+                    Al buscar desde la raíz (<code class="text-zinc-300">/</code>), agregar <code class="text-emerald-400">2&gt; /dev/null</code> al final canaliza los errores de permisos denegados al dispositivo nulo del kernel, limpiando el output.
+                </p>
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // find-engine</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="find-engine">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">ruben@titan</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">$</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-4 border-t border-zinc-800/60 pt-4">
+        <div class="space-y-2">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-bold font-mono rounded-lg">SHELL</span>
+                <h3 class="text-xl font-bold text-white font-mono">grep — Global Regular Expression Print</h3>
+            </div>
+            <p class="text-xs text-zinc-400 leading-relaxed">
+                <span class="font-semibold text-zinc-300">Sintaxis:</span> <code class="text-zinc-200 bg-zinc-950 px-1 rounded">grep [opciones] "patrón" [fichero]</code><br>
+                Procesa ficheros de texto línea por línea en busca de coincidencias con un patrón específico, imprimiendo únicamente los registros válidos.
+            </p>
+        </div>
+
+        <div class="p-3 bg-zinc-950/60 border border-zinc-800 rounded-xl space-y-2 font-mono">
+            <span class="text-[11px] font-bold text-zinc-500 block uppercase tracking-wider">Modificadores de Filtrado de Cadenas</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-zinc-300">
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-emerald-400 font-bold block mb-0.5">-i</code>
+                    <span class="text-zinc-500 text-[10px]">Ignora mayúsculas/minúsculas</span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-sky-400 font-bold block mb-0.5">-r</code>
+                    <span class="text-zinc-500 text-[10px]">Búsqueda recursiva en directorios</span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-amber-400 font-bold block mb-0.5">-v</code>
+                    <span class="text-zinc-500 text-[10px]">Invierte la selección (excluir)</span>
+                </div>
+                <div class="p-2 bg-zinc-900/40 border border-zinc-800/60 rounded-lg text-center">
+                    <code class="text-purple-400 font-bold block mb-0.5">-n</code>
+                    <span class="text-zinc-500 text-[10px]">Muestra el número de línea exacto</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="console-box-wrapper">
+            <div class="console-header px-4 py-2 flex items-center justify-between border-b border-zinc-700 bg-zinc-900">
+                <span class="text-zinc-400 font-bold text-xs font-mono"><i class="fas fa-terminal"></i> tty // grep-engine</span>
+                <button class="btn-replay px-3 py-0.5 text-xs font-bold rounded border border-zinc-700 hover:border-emerald-500 transition-colors text-white"><i class="fas fa-play mr-1"></i> EXEC</button>
+            </div>
+            <div class="custom-terminal p-4 font-mono text-xs bg-[#010409] min-h-[100px]" data-sim-id="grep-engine">
+                <div class="terminal-stream-history space-y-1 text-zinc-300"></div>
+                <div class="flex items-center gap-2 mt-2">
+                    <span class="text-prompt-user font-bold text-emerald-400">ruben@titan</span><span class="text-white">:</span><span class="text-prompt-dir font-bold text-sky-400">~</span><span class="text-white">$</span>
+                    <span class="current-typing text-white"></span><span class="cursor"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+            
+<section id="fhs" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">7. Estándar de Jerarquía del Sistema (FHS)</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Las distribuciones corporativas de Linux implementan el estándar <span class="text-blue-400 font-semibold">FHS (Filesystem Hierarchy Standard)</span>. Esta convención rígida organiza el propósito exacto de cada directorio para garantizar la portabilidad, interoperabilidad y predictibilidad de las aplicaciones y subsistemas.
+        </p>
+    </div>
+
+    <div class="bg-zinc-950/40 border border-zinc-800 rounded-xl p-5 space-y-3 font-mono text-xs">
+        <div class="text-zinc-400 font-bold text-sm">// Estructura integral de la raíz (tree -L 1 /)</div>
+        <div class="text-zinc-300 leading-relaxed space-y-0.5">
+            / <span class="text-zinc-500">(Raíz absoluta del sistema de ficheros)</span><br>
+            ├── bin &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Binarios fundamentales de los comandos globales (ls, cp, cat)</span><br>
+            ├── sbin &nbsp;&nbsp;<span class="text-zinc-500">→ Binarios del sistema para tareas de administración (reboot, fdisk)</span><br>
+            ├── etc &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Ficheros de configuración estáticos de servicios y del sistema</span><br>
+            ├── home &nbsp;&nbsp;<span class="text-zinc-500">→ Carpetas personales aisladas para los usuarios estándar</span><br>
+            ├── root &nbsp;&nbsp;<span class="text-zinc-500">→ Directorio doméstico exclusivo y privado del superusuario root</span><br>
+            ├── usr &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Jerarquía secundaria de lectura para usuarios (programas, librerías)</span><br>
+            ├── var &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Datos variables dinámicos (ficheros de log, colas de impresión, bases de datos)</span><br>
+            ├── dev &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Nodos lógicos de dispositivos físicos e interfaces de hardware</span><br>
+            ├── proc &nbsp;&nbsp;<span class="text-zinc-500">→ Sistema de archivos virtual basado en memoria que expone el estado del Kernel</span><br>
+            └── sys &nbsp;&nbsp;&nbsp;<span class="text-zinc-500">→ Subsistema virtual jerárquico para interactuar con los controladores del núcleo</span>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm font-mono mt-4">
+        <table class="min-w-full text-left border-collapse">
+            <slot name="thead">
+                <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                    <tr>
+                        <th class="p-4 w-1/4">Directorio</th>
+                        <th class="p-4">Propósito Crítico en Arquitectura</th>
+                    </tr>
+                </thead>
+            </slot>
+            <tbody class="divide-y divide-zinc-800 text-zinc-400 text-xs">
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Raíz absoluta (Root Partition):</span> El punto de partida de todo el sistema jerárquico. Cualquier elemento físico, lógico o montado en red arranca desde este nodo principal.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/bin</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Binarios Esenciales de Usuario:</span> Ejecutables fundamentales y globales utilizables por cualquier rol o cuenta del sistema (<code class="text-sky-400">cat</code>, <code class="text-sky-400">ls</code>, <code class="text-sky-400">mkdir</code>, <code class="text-sky-400">cp</code>).</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/sbin</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Binarios del Sistema (System Binaries):</span> Comandos de administración y mantenimiento esenciales reservados para el administrador (<code class="text-sky-400">reboot</code>, <code class="text-sky-400">fdisk</code>, <code class="text-sky-400">ifconfig</code>). Suelen requerir privilegios de superusuario.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/etc</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Configuración del Sistema (Etcétera):</span> Ficheros de configuración planos y específicos del host para controlar servicios locales y subsistemas esenciales (<code class="text-amber-400">/etc/hosts</code>, <code class="text-amber-400">/etc/fstab</code>, <code class="text-amber-400">/etc/passwd</code>).</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/home</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Directorios de Usuarios:</span> Espacio de almacenamiento doméstico y persistente aislado jerárquicamente para que los usuarios estándar salven sus configuraciones personales y datos de trabajo.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/root</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Home del Superusuario:</span> El directorio doméstico privado asignado en exclusividad al usuario administrativo root. Se sitúa fuera de <code class="text-zinc-400">/home</code> para garantizar disponibilidad si la partición de usuarios no se puede montar.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/usr</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Utilidades de Usuario (User System Resources):</span> Históricamente la jerarquía secundaria compartida. Almacena la gran mayoría de programas, librerías compartidas (<code class="text-zinc-400">/usr/lib</code>) y documentación técnica no esencial para el arranque mínimo.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/var</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Datos Variables:</span> Contenedor para archivos de crecimiento dinámico y transitorio en producción, tales como logs de auditoría (<code class="text-purple-400">/var/log</code>), bases de datos activas y colas de impresión o correo electrónico.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/tmp</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Archivos Temporales:</span> Espacio reservado para que las aplicaciones almacenen datos volátiles de corta duración. En muchos sistemas modernos se monta directamente sobre memoria RAM (<code class="text-zinc-400">tmpfs</code>) y se purga automáticamente en cada reinicio.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/opt</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Paquetes Opcionales (Optional):</span> Ubicación estandarizada para instalar paquetes de software y aplicaciones de terceros monolíticas o comerciales que no siguen la estructura tradicional de distribución.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/dev</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Nodos de Dispositivos (Devices):</span> Ficheros especiales que actúan como interfaces directas con el hardware conectado al sistema (ej: discos duros en <code class="text-zinc-400">/dev/sda</code>, terminales virtuales en <code class="text-zinc-400">/dev/tty1</code>). En Linux, todo hardware se gestiona como un archivo.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/proc</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Procesos del Sistema (Virtual FS):</span> Sistema de ficheros pseudo-virtual generado dinámicamente en memoria RAM por el núcleo. Expone información detallada en tiempo real de los procesos activos e hilos de ejecución (<code class="text-zinc-400">/proc/$PID</code>).</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/sys</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Subsistema del Kernel (Virtual FS):</span> Interfaz del kernel estructurada jerárquicamente en memoria que sirve para consultar y alterar dinámicamente los parámetros operativos de los controladores de dispositivos y funciones avanzadas del núcleo.</td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">/mnt &nbsp;/media</td>
+                    <td class="p-4 text-zinc-200 leading-relaxed"><span class="font-semibold text-white">Puntos de Montaje:</span> <code class="text-zinc-400">/mnt</code> está destinado al montaje manual y temporal de sistemas de archivos por el administrador. <code class="text-zinc-400">/media</code> se utiliza para el automontaje dinámico de medios extraíbles como unidades USB o lectores de CD-ROM.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="cheatsheet" class="grid-card-item p-6 border border-zinc-800 bg-zinc-900/20 rounded-2xl space-y-6">
+    <div class="space-y-2">
+        <h2 class="text-2xl font-extrabold tracking-tight text-white font-mono">8. Resumen Rápido — Cheatsheet Sección 5</h2>
+        <p class="text-sm text-zinc-300 leading-relaxed">
+            Matriz de referencia rápida y consulta técnica avanzada para comandos esenciales de gestión, administración, navegación y auditoría del sistema de archivos:
+        </p>
+    </div>
+
+    <div class="overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950/50 text-sm font-mono">
+        <table class="min-w-full text-left border-collapse">
+            <thead class="bg-zinc-900 text-zinc-300 uppercase text-xs tracking-wider border-b border-zinc-800">
+                <tr>
+                    <th class="p-4 w-1/3">Comando de Control</th>
+                    <th class="p-4">Acción Operativa Inmediata</th>
+                    <th class="p-4 w-1/4">Categoría del Sistema</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800 text-zinc-400 text-xs">
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">pwd</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Imprime la ruta absoluta del directorio de trabajo actual (<span class="text-zinc-500">Print Working Directory</span>).</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">tree -L 1 /</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Visualiza la estructura jerárquica de directorios acotada exclusivamente al nivel 1.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cd /ruta</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Transfiere el entorno de la shell utilizando una ruta absoluta desde el nodo raíz <code class="text-zinc-500">/</code>.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cd carpeta/</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Navega hacia un subdirectorio utilizando una ruta relativa al directorio de trabajo actual.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cd ..</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Asciende un nivel jerárquico desplazando la shell directo hacia el directorio padre.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cd ~</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Retorna de forma directa a la carpeta de trabajo personal (<code class="text-zinc-500">home</code>) del usuario activo.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cd -</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Conmuta de regreso al último directorio de trabajo visitado con efecto de retorno.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Navegación</span></td>
+                </tr>
+
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">file fichero</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Inspecciona y determina el tipo de datos real de un fichero analizando sus encabezados mágicos.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Ficheros</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">nano fichero.txt</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Abre o genera un archivo de texto utilizando el editor interactivo ligero e intuitivo Nano.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Editores</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">vi fichero.txt</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Inicializa el editor modal avanzado estándar Vi/Vim para modificaciones en consola.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Editores</span></td>
+                </tr>
+
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">mkdir nombre</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Crea un directorio vacío en la ubicación de trabajo actual.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">Creación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">mkdir -p ruta/sub</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Genera de forma recursiva toda la estructura de directorios padres intermedios faltantes sin errores.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">Creación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cat fichero.txt</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Vuelca y concatena el contenido íntegro del fichero directamente sobre la salida estándar de la shell.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/10 text-teal-400 border border-teal-500/20">Visualización</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">more fichero.txt</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Abre un paginador básico unidireccional que permite la lectura del texto únicamente hacia adelante.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/10 text-teal-400 border border-teal-500/20">Visualización</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">less archivo.txt</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Abre un visor paginado interactivo avanzado bidireccional, óptimo para auditar ficheros masivos de configuración.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-500/10 text-teal-400 border border-teal-500/20">Visualización</span></td>
+                </tr>
+
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cp orig dest</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Copia ficheros duplicando los datos originales hacia una nueva ruta de destino elegida.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20">Manipulación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cp -r dir1/ dir2/</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Duplica colecciones estructurales completas procesando directorios y subcarpetas de modo recursivo.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20">Manipulación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">cp -i orig dest</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Modo interactivo preventivo; solicita confirmación de seguridad explícita antes de sobrescribir cualquier archivo.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20">Manipulación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">mv orig dest</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Desplaza la ubicación física de un recurso o efectúa un renombrado directo sobre el inodo original.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20">Manipulación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">rm fichero</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Desvincula el inodo eliminando ficheros del sistema de forma permanente.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Eliminación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">rm -r directorio/</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Borra directorios enteros procesando recursivamente todos sus subdirectorios y ficheros internos.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Eliminación</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">rm -rf directorio/</td>
+                    <td class="p-4 text-rose-400 font-bold leading-relaxed">Fuerza el borrado recursivo absoluto bloqueando alertas y solicitudes de confirmación del shell. <span class="text-rose-500/90 font-semibold">(Crítico / Peligroso)</span>.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Eliminación</span></td>
+                </tr>
+
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">find /ruta -name "x"</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Rastrea recursivamente en el árbol de inodos objetos que coincidan exactamente con la cadena de metadatos o nombre dado.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">Búsqueda</span></td>
+                </tr>
+                <tr>
+                    <td class="p-4 font-bold text-emerald-400 text-sm">grep -i "patrón" archivo</td>
+                    <td class="p-4 text-zinc-300 leading-relaxed">Escanea líneas internas de texto localizando coincidencias sin discriminar entre mayúsculas y minúsculas.</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20">Búsqueda</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+
+
+
+            
+
+            
+
+        </main>
+    </div>
+
+
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>
